@@ -1,11 +1,16 @@
 import { useState } from "react";
 import zelerius from "../assets/zelerius.svg";
+import world from "../assets/world.svg";
+import save from "../assets/save.svg";
+import copy from "../assets/copy.svg";
+import search from "../assets/search.svg";
+import CheckboxInput from "../source/checkbox";
 
 function Dashboard() {
   return (
     <>
       <main style={{ backgroundColor: "#000000" }}>
-        <div className="container p-5">
+        <div className="container-fluid p-5">
           <div className="row">
             <div className="col-auto">
               <div
@@ -23,14 +28,14 @@ function Dashboard() {
               </div>
             </div>
           </div>
-          <div className="d-flex align-items-center pt-5">
+          <div className="d-flex align-items-center pt-2">
             <div className="btn-group me-3">
               <button
                 type="button"
                 style={{ backgroundColor: "#1ECD45" }}
                 className="btn dropdown-toggle px-5"
                 data-bs-toggle="dropdown"
-                aria-expanded="false"
+                aria-expanded="true"
               >
                 <span className="me-2">
                 <i className="fa fa-download"></i>
@@ -41,6 +46,16 @@ function Dashboard() {
                 <li>
                   <a className="dropdown-item px-5" href="#">
                     Post
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item px-5" href="#">
+                    Put
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item px-5" href="#">
+                    Delete
                   </a>
                 </li>
               </ul>
@@ -65,6 +80,162 @@ function Dashboard() {
               </button>
             </div>
           </div>
+          <div className="d-flex align-items-center pt-5">
+              <span className="fs-5 text-wrap me-2 rounded px-3 py-1" style={{ backgroundColor: "#242424", color: "#D9D9D9",marginLeft: '50px'}}>
+                Parameters
+              </span>
+              <span className="fs-5 mx-5" style={{ color: "#D9D9D9" }}>
+                Headers
+              </span>
+              <span>
+              <span className="fs-5 mx-5 px-2" style={{ color: "#D9D9D9" }}>
+                  Body
+              </span>
+              </span>
+              <span className="mx-5 fs-5" style={{ color: "#D9D9D9" }}>
+                Cookies
+              </span>
+          </div>
+          <div className="d-flex flex-column align-items-center">
+              <table
+                className="table table-bordered rounded-bottom"
+                style={{
+                  backgroundColor: "#242424",
+                  color: "#D9D9D9",
+                  borderColor: "#000000",
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th className="px-1" style={{ backgroundColor: "#242424" }}></th>
+                    <th className="px-4 fs-5" style={{ backgroundColor: "#242424", color: "#D9D9D9" }}>
+                      Key
+                    </th>
+                    <th className="px-4 fs-5" style={{ backgroundColor: "#242424", color: "#D9D9D9" }}>
+                      Value
+                    </th>
+                    <th className="px-4 fs-5" style={{ backgroundColor: "#242424", color: "#D9D9D9" }}>
+                      Description
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="px-2 custom-checkbox" style={{ backgroundColor: "#242424" }}>
+                    <CheckboxInput checked={true} onChange={() => {}}  />
+                    </td>
+                    <td className="px-4 fs-6" style={{ backgroundColor: "#242424", color: "#D9D9D9" }}>
+                      Data 1
+                    </td>
+                    <td className="px-4 fs-6" style={{ backgroundColor: "#242424", color: "#D9D9D9" }}>
+                      Data 2
+                    </td>
+                    <td className="px-4 fs-6" style={{ backgroundColor: "#242424", color: "#D9D9D9" }}>
+                      Data 3
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="px-2 custom-checkbox" style={{ backgroundColor: "#242424" }}>
+                    <CheckboxInput checked={true} onChange={() => {}}  />
+                    </td>
+                    <td className="px-4 fs-6" style={{ backgroundColor: "#242424", color: "#D9D9D9" }}>
+                      Data 1
+                    </td>
+                    <td className="px-4 fs-6" style={{ backgroundColor: "#242424", color: "#D9D9D9" }}>
+                      Data 2
+                    </td>
+                    <td className="px-4 fs-6" style={{ backgroundColor: "#242424", color: "#D9D9D9" }}>
+                      Data 3
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="px-2 custom-checkbox" style={{ backgroundColor: "#242424" }}>
+                    <CheckboxInput checked={true} onChange={() => {}}  />
+                    </td>
+                    <td className="px-4 fs-6" style={{ backgroundColor: "#242424", color: "#D9D9D9" }}>
+                      Data 1
+                    </td>
+                    <td className="px-4 fs-6" style={{ backgroundColor: "#242424", color: "#D9D9D9" }}>
+                      Data 2
+                    </td>
+                    <td className="px-4 fs-6" style={{ backgroundColor: "#242424", color: "#D9D9D9" }}>
+                      Data 3
+                    </td>
+                  </tr>
+                  {/* Add more rows as needed */}
+                </tbody>
+              </table>
+            </div>
+            <div className="">
+              <div className="d-flex align-items-center">
+                <span
+                  className="fs-5 text-wrap  mx-5 me-2 rounded px-3 py-1"
+                  style={{
+                    backgroundColor: "#242424",
+                    color: "#D9D9D9",
+                    marginLeft: "10px",
+                  }}
+                >
+                  Body
+                </span>
+                <span className="fs-5 mx-5" style={{ color: "#D9D9D9" }}>
+                  Cookies
+                </span>
+                <span>
+                  <span className="fs-5 mx-5 px-2" style={{ color: "#D9D9D9" }}>
+                    Headers
+                  </span>
+                  <img src={world} alt="Logo" style={{ marginLeft: '880px' ,width:"30px"}} />
+                  {/* Add three words here */}
+                  <span className="mx-4" style={{ color: "#27874E" }}>200 OK</span>
+                  <span className="mx-4" style={{ color: "#27874E" }}>315 ms</span>
+                  <span className="mx-4" style={{ color: "#27874E" }}>941 B</span>
+                  {/* Add another SVG icon here */}
+                  <img src={save} alt="Logo"  style={{  marginLeft: '10px',width:"30px"}} />
+                </span>
+              </div>
+              <div className="d-flex align-items-center">
+                <div
+                  style={{
+                    backgroundColor: "#242424",
+                    color: "#D9D9D9",
+                    border: "none",
+                    padding: "8px 12px",
+                    borderRadius: "4px",
+                    marginRight: "10px",
+                    flex: 1,
+                    minHeight: "400px",
+                    position: "relative", // Add position relative
+                  }}
+                >
+                  {/* Buttons on the top left */}
+                  <div
+                    style={{
+                      position: "absolute", // Add position absolute for the buttons
+                      top: "18px", // Adjust the top position
+                      left: "12px", // Adjust the left position
+                    }}
+                  >
+                    <button className="btn" style={{  backgroundColor: "#FD6262" ,marginLeft: '10px'}}>Pretty</button>
+                    <button className="btn btn-secondary mr-5" style={{  marginLeft: '20px'}}>Raw</button>
+                    <button className="btn btn-secondary" style={{  marginLeft: '20px'}}>Preview</button>
+                  </div>
+
+                  {/* SVG icons on the top right */}
+                  <div
+                    style={{
+                      position: "absolute", // Add position absolute for the SVG icons
+                      top: "18px", // Adjust the top position
+                      right: "12px", // Adjust the right position
+                    }}
+                  >
+                    <button className="btn btn-outline-light" style={{  marginLeft: '20px',marginRight:'30px'}}>JSON</button>
+                    <img src={copy} alt="Logo"  style={{  marginLeft: '10px',width:"30px",marginRight:'30px'}} />
+                    <img src={search} alt="Logo"  style={{  marginLeft: '10px',width:"30px",marginRight:'20px'}} />
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
       </main>
       <script
