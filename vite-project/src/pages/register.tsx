@@ -4,6 +4,8 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
+  const [otp, setOtp] = useState('');
+  const [showOtpInput, setShowOtpInput] = useState(false);
 
   const handleEmailChange = (event: { target: { value: SetStateAction<string>; }; }) => {
     setEmail(event.target.value);
@@ -17,17 +19,19 @@ function Register() {
     setUsername(event.target.value);
   };
 
+  const handleOtpChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setOtp(event.target.value);
+  };
+
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
 
-    // Create a JSON object with the form data
     const formData = {
       email,
       username,
       password,
     };
 
-    // Send the data to the server using fetch
     fetch('http://localhost:8000/register', {
       method: 'POST',
       headers: {
@@ -35,14 +39,68 @@ function Register() {
       },
       body: JSON.stringify(formData),
     })
-      .then((response) => {
-        console.log('Response:', response);
-        // Handle the response from the server
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.valid) {
+          alert('OTP has been sent to your email. Please enter the OTP to verify.');
+          setShowOtpInput(true);
+        } else {
+          console.error('Error:', data.message);
+        }
       })
       .catch((error) => {
         console.error('Error:', error);
-        // Handle any errors that occurred during the request
       });
+  };
+
+  const handleVerify = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, otp }),
+      });
+
+      const data = await response.json();
+
+      if (data.valid) {
+        alert('OTP verified successfully!');
+      } else {
+        alert('Wrong OTP. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    try {
+      const formData = {
+        email,
+        username,
+        password,
+      };
+
+      const response = await fetch('http://localhost:8000/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.valid) {
+        alert('OTP has been sent to your email. Please enter the OTP to verify.');
+      } else {
+        alert('Error resending OTP. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
@@ -95,6 +153,35 @@ function Register() {
                       Register
                     </button>
                   </div>
+                  {showOtpInput && (
+                    <div className="form-group fs-5 p-3">
+                      <label htmlFor="otp">Enter OTP:</label>
+                      <input
+                        type="text"
+                        className="form-control fs-6 form-control-lg"
+                        id="otp"
+                        value={otp}
+                        onChange={handleOtpChange}
+                        placeholder="Enter OTP"
+                      />
+                      <div className="d-flex pt-3 justify-content-center">
+                        <button
+                          type="button"
+                          className="btn btn-dark btn-lg me-3"
+                          onClick={handleVerify}
+                        >
+                          Verify
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-secondary btn-lg"
+                          onClick={handleResendOTP}
+                        >
+                          Resend OTP
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </form>
               </div>
             </div>
