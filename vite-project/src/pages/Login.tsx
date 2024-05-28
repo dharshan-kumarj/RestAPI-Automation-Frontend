@@ -72,7 +72,7 @@ function Login() {
       <div className="container d-flex justify-content-center align-items-center flex-grow-1">
         <div className="row justify-content-center">
           <div className="col-md-10 col-lg-8 col-xl-12">
-            <div className="card mx-auto" style={{ maxWidth: '800px', width: '600px', height: '500px', backgroundColor: "#242424", borderRight: '4px solid #FD6262', borderBottom: '4px solid #FD6262' }}>
+            <div className="card mx-auto" style={{ maxWidth: '800px', width: '600px', height: '500px', backgroundColor: "#242424", borderRight: '7px solid #FD6262', borderBottom: '7px solid #FD6262', marginTop: '-150px' }}>
               <div className="card-body d-flex flex-column justify-content-center align-items-center">
                 <div className="d-flex flex-column justify-content-center align-items-center">
                   <img src={zelerius} alt="Logo" />
@@ -109,7 +109,7 @@ function Login() {
                     </button>
                   </div>
                   <h3 className='fs-6 pt-4 d-flex justify-content-center' style={{ color: "#D9D9D9" }}>I forgot my password.<a href='#'><span style={{ color: "#FD6262", marginLeft: "10px" }}> Click here.</span></a></h3>
-                  <div className="d-grid pt-3 mb-3 gap-2 col-12 mx-auto">
+                  <div className="d-grid pt-3 mb-5 gap-2 col-12 mx-auto">
                     <button className="btn btn-outline-light form-control" type="button" style={{border: '1px solid #FD6262'}}>Register New Account</button>
                   </div>
                 </form>
