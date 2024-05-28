@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Cookies from 'js-cookie';
+import zelerius from "../assets/zelerius.svg";
 
 function Register() {
   const [email, setEmail] = useState('');
@@ -42,9 +43,10 @@ function Register() {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log('Server response:', data);
         if (data.valid) {
           alert('OTP has been sent to your email. Please enter the OTP to verify.');
-          setShowOtpInput(true);
+          setShowOtpInput(true); // Set showOtpInput to true
         } else {
           console.error('Error:', data.message);
         }
@@ -125,16 +127,54 @@ function Register() {
   };
 
   return (
-    <main className="vh-100 d-flex justify-content-center align-items-center bg-secondary">
-      <div className="container">
+    <main className="vh-100 d-flex flex-column" style={{ backgroundColor: "#000000" }}>
+      <div className="container-fluid p-5">
+        <div className="row justify-content-between align-items-center">
+          <div className="col-auto">
+            <div className="d-flex align-items-center mb-3">
+              <div className="col-auto me-3">
+                <img src={zelerius} alt="Logo" />
+              </div>
+              <div className="col-12">
+                <h1 className="text-start" style={{ color: "#FD6262" }}>
+                  Zelerius API
+                </h1>
+              </div>
+            </div>
+          </div>
+          <div className="col-auto d-flex align-items-center">
+            <button className="btn btn-outline-light me-3" style={{ backgroundColor: "#7474F1", border: '1px solid #7474F1' }}>
+              Back to Home
+            </button>
+            <button className="btn btn-outline-light" style={{ color: "#FD6262", border: '1px solid #FD6262' }}>
+              Login
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="container d-flex justify-content-center align-items-center flex-grow-1">
         <div className="row justify-content-center">
-          <div className="col-md-10 col-lg-8 col-xl-6">
-            <div className="card mx-auto" style={{ maxWidth: '800px' }}>
-              <div className="card-body">
-                <h5 className="card-title text-center mb-4">Register</h5>
-                <form onSubmit={handleSubmit}>
+          <div className="col-md-10 col-lg-8 col-xl-12">
+            <div
+              className="card mx-auto"
+              style={{
+                maxWidth: '800px',
+                width: '600px',
+                height: showOtpInput ? '700px' : '500px', // Apply height based on showOtpInput
+                backgroundColor: "#242424",
+                borderRight: '7px solid #FD6262',
+                borderBottom: '7px solid #FD6262',
+                marginTop: '-150px'
+              }}
+            >
+              <div className="card-body d-flex flex-column justify-content-center align-items-center">
+                <div className="d-flex flex-column justify-content-center align-items-center">
+                  <img src={zelerius} alt="Logo" />
+                </div>
+                <h5 className="card-title text-center fs-1 mb-4" style={{ color: "#FD6262" }}>Register</h5>
+                <h3 className='fs-6' style={{ color: "#D9D9D9" }}>Create an new account</h3>
+                <form onSubmit={handleSubmit} className="w-100">
                   <div className="form-group fs-5 p-3">
-                    <label htmlFor="email">Email address:</label>
                     <input
                       type="email"
                       className="form-control fs-6 form-control-lg"
@@ -146,7 +186,6 @@ function Register() {
                     />
                   </div>
                   <div className="form-group fs-5 p-3">
-                    <label htmlFor="username">Username:</label>
                     <input
                       type="text"
                       className="form-control fs-6 form-control-lg"
@@ -158,7 +197,6 @@ function Register() {
                     />
                   </div>
                   <div className="form-group fs-5 p-3">
-                    <label htmlFor="password">Password:</label>
                     <input
                       type="password"
                       className="form-control fs-6 form-control-lg"
@@ -169,8 +207,8 @@ function Register() {
                       required
                     />
                   </div>
-                  <div className="d-flex pt-5 justify-content-center">
-                    <button type="submit" className="btn btn-dark btn-lg">
+                  <div className="d-flex pt-3 d-grid gap-2 col-12 mx-auto justify-content-center">
+                    <button type="submit" className="btn btn-lg form-control" style={{ backgroundColor: "#FD6262" }}>
                       Register
                     </button>
                   </div>
@@ -189,6 +227,7 @@ function Register() {
                         <button
                           type="button"
                           className="btn btn-dark btn-lg me-3"
+                          style={{ backgroundColor: "#FD6262",color:"black" }}
                           onClick={handleVerify}
                         >
                           Verify
