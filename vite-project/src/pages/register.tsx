@@ -62,11 +62,12 @@ function Register() {
         },
         body: JSON.stringify({ email, otp }),
       });
-
+  
       const data = await response.json();
-
+  
       if (data.valid) {
         alert('OTP verified successfully!');
+        // You might want to perform additional actions here, like navigating to a different page or resetting the form
       } else {
         alert('Wrong OTP. Please try again.');
       }
