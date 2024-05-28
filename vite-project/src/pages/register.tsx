@@ -1,4 +1,5 @@
-import { SetStateAction, useState } from "react";
+import React, { useState } from 'react';
+import Cookies from 'js-cookie';
 
 function Register() {
   const [email, setEmail] = useState('');
@@ -7,19 +8,19 @@ function Register() {
   const [otp, setOtp] = useState('');
   const [showOtpInput, setShowOtpInput] = useState(false);
 
-  const handleEmailChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+  const handleEmailChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setEmail(event.target.value);
   };
 
-  const handlePasswordChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+  const handlePasswordChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setPassword(event.target.value);
   };
 
-  const handleUsernameChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+  const handleUsernameChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setUsername(event.target.value);
   };
 
-  const handleOtpChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+  const handleOtpChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setOtp(event.target.value);
   };
 
@@ -62,12 +63,31 @@ function Register() {
         },
         body: JSON.stringify({ email, otp }),
       });
-  
+
       const data = await response.json();
-  
+
       if (data.valid) {
-        alert('OTP verified successfully!');
-        // You might want to perform additional actions here, like navigating to a different page or resetting the form
+        // Send email and password for login
+        const loginData = { email, password };
+        const loginResponse = await fetch('http://localhost:8000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(loginData),
+        });
+
+        const loginResult = await loginResponse.json();
+
+        if (loginResult.valid) {
+          // Save the token in cookies
+          Cookies.set('token', loginResult.token);
+
+          // Redirect to the dashboard
+          window.location.href = 'http://localhost:5173/dashboard';
+        } else {
+          alert('Error during login. Please try again.');
+        }
       } else {
         alert('Wrong OTP. Please try again.');
       }
