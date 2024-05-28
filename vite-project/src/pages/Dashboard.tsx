@@ -1,9 +1,9 @@
 import { useState , useEffect} from "react";
 import zelerius from "../assets/zelerius.svg";
-import world from "../assets/world.svg";
-import save from "../assets/save.svg";
-import copy from "../assets/copy.svg";
-import search from "../assets/search.svg";
+import world from "../assets/dashboard/world.svg";
+import save from "../assets/dashboard/save.svg";
+import copy from "../assets/dashboard/copy.svg";
+import search from "../assets/dashboard/search.svg";
 import CheckboxInput from "../source/checkbox";
 
 function Dashboard() {
