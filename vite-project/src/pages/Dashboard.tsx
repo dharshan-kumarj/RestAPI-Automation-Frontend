@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import zelerius from "../assets/zelerius.svg";
 import world from "../assets/world.svg";
 import save from "../assets/save.svg";
@@ -7,6 +7,41 @@ import search from "../assets/search.svg";
 import CheckboxInput from "../source/checkbox";
 
 function Dashboard() {
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/profile", {
+          headers: {
+            'Token': getCookie("token"),
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          if (data.valid) {
+            setUsername(data.username);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const getCookie = (name: string) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts && parts.length === 2) {
+      const cookieValue = parts.pop()?.split(";").shift();
+      return cookieValue || "";
+    }
+    return "";
+  };
   return (
     <>
       <main style={{ backgroundColor: "#000000" }}>
@@ -20,10 +55,13 @@ function Dashboard() {
                 <div className="col-auto me-3">
                   <img src={zelerius} alt="Logo" />
                 </div>
-                <div className="col">
+                <div className="col-12">
                   <h1 className="text-start" style={{ color: "#FD6262" }}>
                     Zelerius API
                   </h1>
+                </div>
+                <div className="position-absolute " style={{ top: 70, right: 70 }}>
+                  {username && <span className="fs-2" style={{ color: "#FD6262" }}>{username}</span>}
                 </div>
               </div>
             </div>
