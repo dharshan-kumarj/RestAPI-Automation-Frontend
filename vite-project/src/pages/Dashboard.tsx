@@ -1,4 +1,4 @@
-import { useState , useEffect} from "react";
+import { useState, useEffect } from "react";
 import zelerius from "../assets/zelerius.svg";
 import world from "../assets/dashboard/world.svg";
 import save from "../assets/dashboard/save.svg";
@@ -8,6 +8,7 @@ import CheckboxInput from "../source/checkbox";
 
 function Dashboard() {
   const [username, setUsername] = useState("");
+  const [selectedOption, setSelectedOption] = useState("Get");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -42,6 +43,7 @@ function Dashboard() {
     }
     return "";
   };
+
   return (
     <>
       <main style={{ backgroundColor: "#000000" }}>
@@ -76,23 +78,44 @@ function Dashboard() {
                 aria-expanded="true"
               >
                 <span className="me-2">
-                <i className="fa fa-download"></i>
+                  <i className="fa fa-download"></i>
                 </span>
-                <span className="pl-2">Get</span>
+                <span className="pl-2">{selectedOption}</span>
               </button>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item px-5" href="#">
+                  <a
+                    className="dropdown-item px-5"
+                    href="#"
+                    onClick={() => setSelectedOption("Get")}
+                  >
+                    Get
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="dropdown-item px-5"
+                    href="#"
+                    onClick={() => setSelectedOption("Post")}
+                  >
                     Post
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item px-5" href="#">
+                  <a
+                    className="dropdown-item px-5"
+                    href="#"
+                    onClick={() => setSelectedOption("Put")}
+                  >
                     Put
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item px-5" href="#">
+                  <a
+                    className="dropdown-item px-5"
+                    href="#"
+                    onClick={() => setSelectedOption("Delete")}
+                  >
                     Delete
                   </a>
                 </li>
