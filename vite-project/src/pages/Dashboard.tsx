@@ -1,4 +1,4 @@
-import { useState, useEffect, SetStateAction } from "react";
+import { useState , useEffect} from "react";
 import zelerius from "../assets/zelerius.svg";
 import world from "../assets/dashboard/world.svg";
 import save from "../assets/dashboard/save.svg";
@@ -16,17 +16,20 @@ function Dashboard() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch("http://localhost:8000/profile", {
-          headers: {
-            'Token': getCookie("token"),
-          },
-        });
+        const token = getCookie("token");
+        if (token) {
+          const response = await fetch("http://localhost:8000/profile", {
+            method: "POST",
+            headers: {
+              "Token": token,
+            },
+          });
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data);
-          if (data.valid) {
-            setUsername(data.username);
+          if (response.ok) {
+            const data = await response.json();
+            if (data.valid) {
+              setUsername(data.username);
+            }
           }
         }
       } catch (error) {
@@ -37,60 +40,44 @@ function Dashboard() {
     fetchProfile();
   }, []);
 
-        const handleMethodChange = (option: SetStateAction<string>) => {
-          setSelectedOption(option);
-          setUrl(`http://localhost:8000/fetch-one?method=${selectedOption.toLowerCase()}`);
-        };
+  const handleMethodChange = (option: string) => {
+    setSelectedOption(option);
+    setUrl(`http://localhost:8000/fetch-one?method=${option.toLowerCase()}`);
+  };
 
-        interface RequestOptions extends RequestInit {
-          body?: string | undefined;
-        }
-        
-        interface RequestOptionsWithBody extends RequestOptions {
-          method: Exclude<RequestOptions['method'], 'GET' | 'HEAD'>;
-          body: string;
-        }
-        
-        interface RequestOptionsWithoutBody extends RequestOptions {
-          method: 'GET' | 'HEAD';
-          body?: undefined;
-        }
-        
-        type SafeRequestOptions = RequestOptionsWithBody | RequestOptionsWithoutBody;
+  const handleSendClick = async () => {
+    try {
+      const requestOptions: RequestInit = {
+        method: selectedOption,
+        headers,
+      };
 
-        const handleSendClick = async () => {
-          try {
-            const requestOptions: RequestOptions = {
-              method: selectedOption,
-              headers: headers,
-            };
-        
-            if (
-              selectedOption !== 'GET' &&
-              selectedOption !== 'HEAD' &&
-              selectedOption !== 'OPTIONS'
-            ) {
-              requestOptions.body = JSON.stringify(body);
-            }
-        
-            const response = await fetch(url, requestOptions);
-        
-            // Check if the response is valid JSON
-            const isValidJSON = response.headers.get('Content-Type')?.includes('application/json');
-        
-            let data;
-            if (isValidJSON) {
-              data = await response.json();
-            } else {
-              data = await response.text(); // Get the response as text
-            }
-        
-            console.log(data);
-            // Handle the response data as needed
-          } catch (error) {
-            console.error('Error:', error);
-          }
-        };
+      if (
+        selectedOption !== "GET" &&
+        selectedOption !== "HEAD" &&
+        selectedOption !== "OPTIONS"
+      ) {
+        requestOptions.body = JSON.stringify(body);
+      }
+
+      const response = await fetch(url, requestOptions);
+
+      // Check if the response is valid JSON
+      const isValidJSON = response.headers.get("Content-Type")?.includes("application/json");
+
+      let data;
+      if (isValidJSON) {
+        data = await response.json();
+      } else {
+        data = await response.text(); // Get the response as text
+      }
+
+      console.log(data);
+      // Handle the response data as needed
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const getCookie = (name: string) => {
     const value = `; ${document.cookie}`;
@@ -101,7 +88,6 @@ function Dashboard() {
     }
     return "";
   };
-
   return (
     <>
       <main style={{ backgroundColor: "#000000" }}>
@@ -136,67 +122,43 @@ function Dashboard() {
                 aria-expanded="true"
               >
                 <span className="me-2">
-                  <i className="fa fa-download"></i>
+                <i className="fa fa-download"></i>
                 </span>
-                <span className="pl-2">{selectedOption}</span>
+                <span className="pl-2">Get</span>
               </button>
               <ul className="dropdown-menu">
                 <li>
-                  <a
-                    className="dropdown-item px-5"
-                    href="#"
-                    onClick={() => setSelectedOption("Get")}
-                  >
-                    Get
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item px-5"
-                    href="#"
-                    onClick={() => setSelectedOption("Post")}
-                  >
+                  <a className="dropdown-item px-5" href="#">
                     Post
                   </a>
                 </li>
                 <li>
-                  <a
-                    className="dropdown-item px-5"
-                    href="#"
-                    onClick={() => setSelectedOption("Put")}
-                  >
+                  <a className="dropdown-item px-5" href="#">
                     Put
                   </a>
                 </li>
                 <li>
-                  <a
-                    className="dropdown-item px-5"
-                    href="#"
-                    onClick={() => setSelectedOption("Delete")}
-                  >
+                  <a className="dropdown-item px-5" href="#">
                     Delete
                   </a>
                 </li>
               </ul>
             </div>
             <div className="ms-4 me-4 d-flex">
-            <textarea
-              className="form-control border border-white me-3"
-              rows={1}
-              style={{
-                resize: "none",
-                backgroundColor: "#000000",
-                color: "white",
-                width: "800px",
-              }}
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-            ></textarea>
+              <textarea
+                className="form-control border border-white me-3"
+                rows={1}
+                style={{
+                  resize: "none",
+                  backgroundColor: "#000000",
+                  color: "white",
+                  width: "800px",
+                }}
+              ></textarea>
               <button
                 type="button"
                 className="btn px-5 ms-4 me-4"
                 style={{ backgroundColor: "#FD6262" }}
-                onClick={handleSendClick}
               >
                 Send
               </button>

@@ -56,75 +56,59 @@ function Register() {
       });
   };
 
-  const handleVerify = async () => {
-    try {
-      const response = await fetch('http://localhost:8000/verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, otp }),
-      });
-
-      const data = await response.json();
-
-      if (data.valid) {
-        // Send email and password for login
-        const loginData = { email, password };
-        const loginResponse = await fetch('http://localhost:8000/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(loginData),
-        });
-
-        const loginResult = await loginResponse.json();
-
-        if (loginResult.valid) {
+  const handleVerify = () => {
+    fetch('http://localhost:8000/verify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, otp }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.valid) {
+          // Verification successful, no need to send email and password for login
           // Save the token in cookies
-          Cookies.set('token', loginResult.token);
+          Cookies.set('token', data.token);
 
           // Redirect to the dashboard
           window.location.href = 'http://localhost:5173/dashboard';
         } else {
-          alert('Error during login. Please try again.');
+          alert('Wrong OTP. Please try again.');
         }
-      } else {
-        alert('Wrong OTP. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  const handleResendOTP = async () => {
-    try {
-      const formData = {
-        email,
-        username,
-        password,
-      };
-
-      const response = await fetch('http://localhost:8000/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+      })
+      .catch((error) => {
+        console.error('Error:', error);
       });
-
-      const data = await response.json();
-
-      if (data.valid) {
-        alert('OTP has been sent to your email. Please enter the OTP to verify.');
-      } else {
-        alert('Error resending OTP. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
   };
+
+  const handleResendOTP = () => {
+    const formData = {
+      email,
+      username,
+      password,
+    };
+
+    fetch('http://localhost:8000/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.valid) {
+          alert('OTP has been sent to your email. Please enter the OTP to verify.');
+        } else {
+          alert('Error resending OTP. Please try again.');
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
 
   return (
     <main className="vh-100 d-flex flex-column" style={{ backgroundColor: "#000000" }}>

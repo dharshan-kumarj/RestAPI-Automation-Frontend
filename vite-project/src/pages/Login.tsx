@@ -15,32 +15,33 @@ function Login() {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event: { preventDefault: () => void; }) => {
+  const handleSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     const data = { email, password };
 
-    fetch('http://localhost:8000/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.valid) {
-          // Save the token in the cookies
-          Cookies.set('token', data.token);
-          // Redirect to the dashboard
-          window.location.href = 'http://localhost:5173/dashboard';
-        } else {
-          setErrorMessage('Incorrect email or password. Please verify your credentials.');
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        setErrorMessage('An error occurred. Please try again later.');
+    try {
+      const response = await fetch('http://localhost:8000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       });
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        // Save the token in the cookies
+        Cookies.set('token', responseData.token);
+        // Redirect to the dashboard
+        window.location.href = 'http://localhost:5173/dashboard';
+      } else {
+        setErrorMessage(responseData.message || 'An error occurred during login');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setErrorMessage('An error occurred. Please try again later.');
+    }
   };
 
   return (
