@@ -146,7 +146,11 @@ function Register() {
             <button className="btn btn-outline-light me-3" style={{ backgroundColor: "#7474F1", border: '1px solid #7474F1' }}>
               Back to Home
             </button>
-            <button className="btn btn-outline-light" style={{ color: "#FD6262", border: '1px solid #FD6262' }}>
+            <button
+              className="btn btn-outline-light"
+              style={{ color: "#FD6262", border: "1px solid #FD6262" }}
+              onClick={() => window.location.href = "http://localhost:5173/login"}
+            >
               Login
             </button>
           </div>

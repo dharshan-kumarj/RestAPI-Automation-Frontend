@@ -63,7 +63,7 @@ function Login() {
               <button className="btn btn-outline-light me-3" style={{ backgroundColor: "#7474F1",border: '1px solid #7474F1' }}>
                 Back to Home
               </button>
-              <button className="btn btn-outline-light" style={{ color: "#FD6262", border: '1px solid #FD6262' }}>
+              <button className="btn btn-outline-light" style={{ color: "#FD6262", border: '1px solid #FD6262' }} onClick={() => window.location.href = "http://localhost:5173/register"}>
                 Register
               </button>
             </div>
@@ -72,14 +72,14 @@ function Login() {
       <div className="container d-flex justify-content-center align-items-center flex-grow-1">
         <div className="row justify-content-center">
           <div className="col-md-10 col-lg-8 col-xl-12">
-            <div className="card mx-auto" style={{ maxWidth: '800px', width: '600px', height: '500px', backgroundColor: "#242424", borderRight: '7px solid #FD6262', borderBottom: '7px solid #FD6262', marginTop: '-150px' }}>
+            <div className="card mx-auto" style={{ maxWidth: '800px', width: '600px', height: '600px', backgroundColor: "#242424", borderRight: '7px solid #FD6262', borderBottom: '7px solid #FD6262', marginTop: '-150px' }}>
               <div className="card-body d-flex flex-column justify-content-center align-items-center">
                 <div className="d-flex flex-column justify-content-center align-items-center">
                   <img src={zelerius} alt="Logo" />
                 </div>
                 <h5 className="card-title text-center fs-1 mb-4" style={{ color: "#FD6262" }}>Login</h5>
                 <h3 className='fs-6' style={{ color: "#D9D9D9" }}> Sign in to your Account</h3>
-                {errorMessage && <div className="alert alert-danger" role="alert">{errorMessage}</div>}
+                {errorMessage && <div className="alert pt-2" style={{ backgroundColor: "#FD6262" }} role="alert">{errorMessage}</div>}
                 <form onSubmit={handleSubmit} className="w-100">
                   <div className="form-group fs-5 p-3">
                     <input
@@ -108,9 +108,9 @@ function Login() {
                       Login
                     </button>
                   </div>
-                  <h3 className='fs-6 pt-4 d-flex justify-content-center' style={{ color: "#D9D9D9" }}>I forgot my password.<a href='#'><span style={{ color: "#FD6262", marginLeft: "10px" }}> Click here.</span></a></h3>
+                  <h3 className='fs-6 pt-4 d-flex justify-content-center' style={{ color: "#D9D9D9" }}>I forgot my password.<span style={{ color: "#FD6262", marginLeft: "10px" }} onClick={() => window.location.href = "http://localhost:5173/forgotpass"}> Click here.</span></h3>
                   <div className="d-grid pt-3 mb-5 gap-2 col-12 mx-auto">
-                    <button className="btn btn-outline-light form-control" type="button" style={{border: '1px solid #FD6262'}}>Register New Account</button>
+                    <button className="btn btn-outline-light form-control" type="button" style={{border: '1px solid #FD6262'}} onClick={() => window.location.href = "http://localhost:5173/register"}>Register New Account</button>
                   </div>
                 </form>
               </div>

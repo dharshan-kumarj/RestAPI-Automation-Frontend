@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import zelerius from "../assets/zelerius.svg";
 import world from "../assets/dashboard/world.svg";
 import save from "../assets/dashboard/save.svg";
@@ -9,6 +9,9 @@ import CheckboxInput from "../source/checkbox";
 function Dashboard() {
   const [username, setUsername] = useState("");
   const [selectedOption, setSelectedOption] = useState("Get");
+  const [url, setUrl] = useState("");
+  const [headers, setHeaders] = useState({});
+  const [body, setBody] = useState({});
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -33,6 +36,61 @@ function Dashboard() {
 
     fetchProfile();
   }, []);
+
+        const handleMethodChange = (option: SetStateAction<string>) => {
+          setSelectedOption(option);
+          setUrl(`http://localhost:8000/fetch-one?method=${selectedOption.toLowerCase()}`);
+        };
+
+        interface RequestOptions extends RequestInit {
+          body?: string | undefined;
+        }
+        
+        interface RequestOptionsWithBody extends RequestOptions {
+          method: Exclude<RequestOptions['method'], 'GET' | 'HEAD'>;
+          body: string;
+        }
+        
+        interface RequestOptionsWithoutBody extends RequestOptions {
+          method: 'GET' | 'HEAD';
+          body?: undefined;
+        }
+        
+        type SafeRequestOptions = RequestOptionsWithBody | RequestOptionsWithoutBody;
+
+        const handleSendClick = async () => {
+          try {
+            const requestOptions: RequestOptions = {
+              method: selectedOption,
+              headers: headers,
+            };
+        
+            if (
+              selectedOption !== 'GET' &&
+              selectedOption !== 'HEAD' &&
+              selectedOption !== 'OPTIONS'
+            ) {
+              requestOptions.body = JSON.stringify(body);
+            }
+        
+            const response = await fetch(url, requestOptions);
+        
+            // Check if the response is valid JSON
+            const isValidJSON = response.headers.get('Content-Type')?.includes('application/json');
+        
+            let data;
+            if (isValidJSON) {
+              data = await response.json();
+            } else {
+              data = await response.text(); // Get the response as text
+            }
+        
+            console.log(data);
+            // Handle the response data as needed
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        };
 
   const getCookie = (name: string) => {
     const value = `; ${document.cookie}`;
@@ -122,20 +180,23 @@ function Dashboard() {
               </ul>
             </div>
             <div className="ms-4 me-4 d-flex">
-              <textarea
-                className="form-control border border-white me-3"
-                rows={1}
-                style={{
-                  resize: "none",
-                  backgroundColor: "#000000",
-                  color: "white",
-                  width: "800px",
-                }}
-              ></textarea>
+            <textarea
+              className="form-control border border-white me-3"
+              rows={1}
+              style={{
+                resize: "none",
+                backgroundColor: "#000000",
+                color: "white",
+                width: "800px",
+              }}
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+            ></textarea>
               <button
                 type="button"
                 className="btn px-5 ms-4 me-4"
                 style={{ backgroundColor: "#FD6262" }}
+                onClick={handleSendClick}
               >
                 Send
               </button>
