@@ -65,11 +65,36 @@ function Register() {
       body: JSON.stringify({ email, otp }),
     })
       .then((response) => response.json())
-      .then((data) => {
+      .then(async (data) => {
         if (data.valid) {
           // Verification successful, no need to send email and password for login
           // Save the token in cookies
-          Cookies.set('token', data.token);
+          const data = { email, password };
+          console.log(data);
+
+          try {
+            const response = await fetch('http://localhost:8000/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            });
+      
+            const responseData = await response.json();
+      
+            if (response.ok) {
+              // Save the token in the cookies
+              Cookies.set('token', responseData.token);
+              // Redirect to the dashboard
+              window.location.href = 'http://localhost:5173/dashboard';
+            } else {
+              setErrorMessage(responseData.message || 'An error occurred during login');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            setErrorMessage('An error occurred. Please try again later.');
+          }
 
           // Redirect to the dashboard
           window.location.href = 'http://localhost:5173/dashboard';
@@ -241,3 +266,7 @@ function Register() {
 }
 
 export default Register;
+
+function setErrorMessage(arg0: any) {
+  throw new Error('Function not implemented.');
+}
