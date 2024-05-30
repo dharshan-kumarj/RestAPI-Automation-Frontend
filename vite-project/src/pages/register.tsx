@@ -8,6 +8,7 @@ function Register() {
   const [username, setUsername] = useState('');
   const [otp, setOtp] = useState('');
   const [showOtpInput, setShowOtpInput] = useState(false);
+  const [, setErrorMessage] = useState('');
 
   const handleEmailChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setEmail(event.target.value);
@@ -266,7 +267,3 @@ function Register() {
 }
 
 export default Register;
-
-function setErrorMessage(arg0: any) {
-  throw new Error('Function not implemented.');
-}

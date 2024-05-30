@@ -124,21 +124,42 @@ function Dashboard() {
                 <span className="me-2">
                 <i className="fa fa-download"></i>
                 </span>
-                <span className="pl-2">Get</span>
+                <span className="pl-2">{selectedOption}</span>
               </button>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item px-5" href="#">
+                  <a
+                    className="dropdown-item px-5"
+                    href="#"
+                    onClick={() => setSelectedOption("Get")}
+                  >
+                    Get
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="dropdown-item px-5"
+                    href="#"
+                    onClick={() => setSelectedOption("Post")}
+                  >
                     Post
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item px-5" href="#">
+                  <a
+                    className="dropdown-item px-5"
+                    href="#"
+                    onClick={() => setSelectedOption("Put")}
+                  >
                     Put
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item px-5" href="#">
+                  <a
+                    className="dropdown-item px-5"
+                    href="#"
+                    onClick={() => setSelectedOption("Delete")}
+                  >
                     Delete
                   </a>
                 </li>
