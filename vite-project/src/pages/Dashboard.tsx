@@ -40,45 +40,6 @@ function Dashboard() {
     fetchProfile();
   }, []);
 
-  const handleMethodChange = (option: string) => {
-    setSelectedOption(option);
-    setUrl(`http://localhost:8000/fetch-one?method=${option.toLowerCase()}`);
-  };
-
-  const handleSendClick = async () => {
-    try {
-      const requestOptions: RequestInit = {
-        method: selectedOption,
-        headers,
-      };
-
-      if (
-        selectedOption !== "GET" &&
-        selectedOption !== "HEAD" &&
-        selectedOption !== "OPTIONS"
-      ) {
-        requestOptions.body = JSON.stringify(body);
-      }
-
-      const response = await fetch(url, requestOptions);
-
-      // Check if the response is valid JSON
-      const isValidJSON = response.headers.get("Content-Type")?.includes("application/json");
-
-      let data;
-      if (isValidJSON) {
-        data = await response.json();
-      } else {
-        data = await response.text(); // Get the response as text
-      }
-
-      console.log(data);
-      // Handle the response data as needed
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
   const getCookie = (name: string) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -88,6 +49,53 @@ function Dashboard() {
     }
     return "";
   };
+
+  const handleSendRequest = async () => {
+    const requestData = {
+      method: selectedOption,
+      url: url,
+      headers: headers || {},
+      body: body || {},
+    };
+  
+    // Check if requestData is not empty or null
+    if (Object.keys(requestData).length === 0 || !requestData) {
+      console.error("Request data is empty or null");
+      return;
+    }
+  
+    console.log("Request data being sent to the server:", requestData);
+  
+    try {
+      const token = getCookie("token"); // Get the token here
+  
+      if (!token) {
+        console.error("Token is missing");
+        return;
+      }
+  
+      const response = await fetch("http://localhost:8000/fetch-one", {
+        method: "POST",
+        headers: {
+          "Token": token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Response data:", data);
+        // Handle the response data as needed
+      } else {
+        const errorData = await response.json();
+        console.error("Error:", errorData);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <>
       <main style={{ backgroundColor: "#000000" }}>
@@ -166,20 +174,22 @@ function Dashboard() {
               </ul>
             </div>
             <div className="ms-4 me-4 d-flex">
-              <textarea
+            <input
                 className="form-control border border-white me-3"
-                rows={1}
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
                 style={{
                   resize: "none",
                   backgroundColor: "#000000",
                   color: "white",
                   width: "800px",
                 }}
-              ></textarea>
+              />
               <button
                 type="button"
                 className="btn px-5 ms-4 me-4"
                 style={{ backgroundColor: "#FD6262" }}
+                onClick={handleSendRequest}
               >
                 Send
               </button>
