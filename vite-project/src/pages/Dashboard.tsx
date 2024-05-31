@@ -12,6 +12,7 @@ function Dashboard() {
   const [url, setUrl] = useState("");
   const [headers, setHeaders] = useState({});
   const [body, setBody] = useState({});
+  const [responseData, setResponseData] = useState("");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -57,23 +58,23 @@ function Dashboard() {
       headers: headers || {},
       body: body || {},
     };
-  
+
     // Check if requestData is not empty or null
     if (Object.keys(requestData).length === 0 || !requestData) {
       console.error("Request data is empty or null");
       return;
     }
-  
+
     console.log("Request data being sent to the server:", requestData);
-  
+
     try {
       const token = getCookie("token"); // Get the token here
-  
+
       if (!token) {
         console.error("Token is missing");
         return;
       }
-  
+
       const response = await fetch("http://localhost:8000/fetch-one", {
         method: "POST",
         headers: {
@@ -82,19 +83,22 @@ function Dashboard() {
         },
         body: JSON.stringify(requestData),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log("Response data:", data);
-        // Handle the response data as needed
+        setResponseData(JSON.stringify(data, null, 2)); // Set the response data in the state
       } else {
         const errorData = await response.json();
         console.error("Error:", errorData);
+        setResponseData(JSON.stringify(errorData, null, 2)); // Set the error data in the state
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error:", error);
+      setResponseData(error.toString()); // Set the error message in the state
     }
   };
+
 
   return (
     <>
@@ -348,6 +352,20 @@ function Dashboard() {
                     <img src={copy} alt="Logo"  style={{  marginLeft: '10px',width:"30px",marginRight:'30px'}} />
                     <img src={search} alt="Logo"  style={{  marginLeft: '10px',width:"30px",marginRight:'20px'}} />
                   </div>
+                      <textarea
+                    style={{
+                      width: "100%",
+                      height: "80%",
+                      minHeight: "400px",
+                      resize: "none",
+                      backgroundColor: "#242424",
+                      color: "#D9D9D9",
+                      border: "none",
+                      padding: "30px",
+                    }}
+                    value={responseData}
+                    readOnly
+                  />
                 </div>
               </div>
             </div>
