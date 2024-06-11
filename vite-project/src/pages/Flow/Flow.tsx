@@ -7,26 +7,24 @@ import ReactFlow, {
   Edge,
   OnConnect,
   Connection,
-  Edge as ReactFlowEdge,
   isNode,
   isEdge,
   ReactFlowProps,
 } from 'react-flow-renderer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import MethodNode from './MethodNode';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
-interface FlowProps extends ReactFlowProps {
+interface CustomFlowProps extends ReactFlowProps {
   elements: ReactNode[];
-  onElementsRemove: (elementsToRemove: (Node | Edge)[]) => void;
-  onConnect: OnConnect;
-  minZoom: number;
-  maxZoom: number;
-  defaultZoom: number;
-  className: string;
 }
 
 const Flow = () => {
   const [elements, setElements] = useState<(Node | Edge)[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const handleModal = () => setShowModal(!showModal);
 
   const onElementsRemove = (elementsToRemove: (Node | Edge)[]) =>
     setElements((els) =>
@@ -36,7 +34,7 @@ const Flow = () => {
         } else {
           return !elementsToRemove.some((toRemove) => {
             if ('id' in toRemove) {
-              return toRemove.id === el.id;
+              return toRemove.id === el.id || (el.type === 'methodNode' && toRemove.id === el.id);
             }
             return false;
           });
@@ -56,6 +54,21 @@ const Flow = () => {
 
   const getElementProps = (element: Node | Edge) => {
     if (isNode(element)) {
+      if (element.type === 'methodNode') {
+        return (
+          <MethodNode
+            id={element.id}
+            type={element.type}
+            data={element.data}
+            selected={false}
+            isConnectable={true}
+            xPos={element.position.x}
+            yPos={element.position.y}
+            dragging={false}
+            zIndex={0}
+          />
+        );
+      }
       return React.createElement('div', {
         id: element.id,
         type: element.type,
@@ -74,9 +87,8 @@ const Flow = () => {
 
   const elementProps: ReactNode[] = elements.map(getElementProps);
 
-  const flowProps: FlowProps = {
+  const flowProps: CustomFlowProps = {
     elements: elementProps,
-    onElementsRemove,
     onConnect,
     minZoom: 0.2,
     maxZoom: 2,
@@ -84,16 +96,27 @@ const Flow = () => {
     className: 'bg-dark',
   };
 
+  const handleAddBlock = () => {
+    const newNode: Node = {
+      id: `methodNode-${elements.length}`,
+      type: 'methodNode',
+      position: { x: 200, y: 200 }, // Adjust the position as needed
+      data: {},
+    };
+  
+    setElements((els) => els.concat(newNode));
+    setShowModal(true); // Open the modal when the "Add blocks" button is clicked
+  };
+
   return (
     <div className="vh-100 bg-dark text-light d-flex flex-column">
-      <div className="flex-grow-1 position-relative overflow-hidden">
-        <div className="position-absolute top-0 start-0 m-3">
-          <button className="btn btn-outline-light text-white btn-sm">
+      <div className="flex-grow-1 position-relative">
+      <Button variant="outline-light" className="text-white btn-sm" onClick={handleModal}>
             <i className="bi bi-plus-lg me-1"></i>
             Add blocks
-          </button>
-        </div>
+          </Button>
         <ReactFlow {...flowProps}>
+
           <Background />
           <Controls />
           <MiniMap />
@@ -123,6 +146,33 @@ const Flow = () => {
           </div>
         </div>
       </div>
+      <Modal show={showModal} onHide={handleModal} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Configure HTTP Request</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {/* Render the MethodNode component with the required props */}
+        <MethodNode
+          id="temp-id"
+          type="methodNode"
+          data={{}}
+          selected={false}
+          isConnectable={true}
+          xPos={0}
+          yPos={0}
+          dragging={false}
+          zIndex={0}
+        />
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleModal}>
+          Cancel
+        </Button>
+        <Button variant="primary" onClick={handleModal}>
+          Add
+        </Button>
+      </Modal.Footer>
+    </Modal>
     </div>
   );
 };
