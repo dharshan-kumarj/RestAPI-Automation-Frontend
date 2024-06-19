@@ -11,7 +11,7 @@ function Main() {
         const token = Cookies.get("token");
 
         if (!token) {
-            window.location.href = "http://localhost:8000/login";
+            window.location.href = "http://localhost:5173/login";
             return;
         }
         setToken(token)
