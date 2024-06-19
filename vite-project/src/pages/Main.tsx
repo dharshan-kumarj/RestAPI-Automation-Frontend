@@ -1,9 +1,9 @@
-// Main.js (or Main.tsx)
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import SelectWorkSpace from "../components/SelectWorkSpace";
 import TestCases from "../components/TestCases";
+import EndPointData from "../components/EndPointData";
 import WorkSpaceDisplay from "../components/WorkSpaceDisplay";
 
 function Main() {
@@ -57,6 +57,11 @@ function Main() {
             "imp": true
         }
     ]);
+    const headers = {
+        'Content-Type': 'application/json',
+        'Token': token,
+    };
+    const body = { email: 'sanjaysagarlearn@gmail.com', password: '12345' };
 
     const checkToken = async () => {
         const token = Cookies.get("token");
@@ -84,6 +89,12 @@ function Main() {
         <div>
             <h1>Main Component {workspace_id}</h1>
             <TestCases testCases={testCases} setTestCases={setTestCases} />
+            <EndPointData 
+                token={token} 
+                headers={headers} 
+                body={body} 
+                testCases={testCases}
+            />
             <WorkSpaceDisplay token={token} workspace_id={workspace_id} />
         </div>
     );

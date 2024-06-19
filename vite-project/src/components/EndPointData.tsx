@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import ResponseDisplay from './ResponseDisplay';
 
-function EndPointData() {
+function EndPointData({ token, headers, body, testCases }) {
   const [method, setMethod] = useState('POST');
   const [url, setUrl] = useState('http://localhost:8000/fetch-one');
-  const [headers, setHeaders] = useState({});
-  const [body, setBody] = useState({ email: 'sanjaysagarlearn@gmail.com', password: '12345' });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState(null);
+  const [responseData, setResponseData] = useState(null);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
@@ -18,12 +19,7 @@ function EndPointData() {
       url,
       headers,
       body,
-      test_cases: [
-        {
-          case: 'check_status_200',
-          data: null,
-        },
-      ],
+      test_cases: testCases,
     };
 
     try {
@@ -31,25 +27,26 @@ function EndPointData() {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'token':'',
+          'Token': token,
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(requestData),
       });
 
       if (!response.ok) {
         throw new Error('Failed to send data');
       }
 
-      const responseData = await response.json();
-      console.log('Response data:', responseData);
-    } catch (error: unknown) {
+      const data = await response.json();
+      setResponseData(data);
+      console.log('Response data:', data);
+    } catch (error) {
       setError(error instanceof Error ? error : new Error('An error occurred'));
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
 
     if (name === 'method') {
@@ -64,41 +61,61 @@ function EndPointData() {
   };
 
   return (
-    <div>
-      <h1>EndPointData</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            Method:
-            <select name="method" value={method} onChange={handleChange}>
-              <option value="POST">POST</option>
-              <option value="GET">GET</option>
-            </select>
-          </label>
+    <div className="container mt-5">
+      <h1 className="mb-4">EndPoint Data</h1>
+      <form onSubmit={handleSubmit} className="border p-4 shadow-sm bg-white">
+        <div className="form-group mb-3">
+          <label htmlFor="method">Method</label>
+          <select
+            id="method"
+            name="method"
+            className="form-control"
+            value={method}
+            onChange={handleChange}
+          >
+            <option value="POST">POST</option>
+            <option value="GET">GET</option>
+          </select>
         </div>
-        <div>
-          <label>
-            URL:
-            <input type="text" name="url" value={url} onChange={handleChange} />
-          </label>
+        <div className="form-group mb-3">
+          <label htmlFor="url">URL</label>
+          <input
+            type="text"
+            id="url"
+            name="url"
+            className="form-control"
+            value={url}
+            onChange={handleChange}
+          />
         </div>
-        <div>
-          <label>
-            Email:
-            <input type="email" name="email" value={body.email} onChange={handleChange} />
-          </label>
+        <div className="form-group mb-3">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            className="form-control"
+            value={body.email}
+            onChange={handleChange}
+          />
         </div>
-        <div>
-          <label>
-            Password:
-            <input type="password" name="password" value={body.password} onChange={handleChange} />
-          </label>
+        <div className="form-group mb-3">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            className="form-control"
+            value={body.password}
+            onChange={handleChange}
+          />
         </div>
-        <button type="submit" disabled={isLoading}>
+        <button type="submit" className="btn btn-primary" disabled={isLoading}>
           {isLoading ? 'Sending...' : 'Send Data'}
         </button>
       </form>
-      {error && <p>Error: {error.message}</p>}
+      {error && <div className="alert alert-danger mt-3">Error: {error.message}</div>}
+      {responseData && <ResponseDisplay data={responseData} />}
     </div>
   );
 }
