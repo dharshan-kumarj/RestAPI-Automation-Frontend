@@ -95,7 +95,7 @@ function Main() {
                 body={body} 
                 testCases={testCases}
             />
-            <WorkSpaceDisplay token={token} workspace_id={workspace_id} />
+            {/* <WorkSpaceDisplay token={token} workspace_id={workspace_id} /> */}
         </div>
     );
 }

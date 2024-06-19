@@ -23,8 +23,8 @@ function EndPointData({ token, headers, body, testCases }) {
     };
 
     try {
-      const response = await fetch(url, {
-        method,
+      const response = await fetch("http://localhost:8000/fetch-one", {
+        method:"POST",
         headers: {
           'Content-Type': 'application/json',
           'Token': token,
@@ -53,71 +53,46 @@ function EndPointData({ token, headers, body, testCases }) {
       setMethod(value);
     } else if (name === 'url') {
       setUrl(value);
-    } else if (name === 'email') {
-      setBody({ ...body, email: value });
-    } else if (name === 'password') {
-      setBody({ ...body, password: value });
-    }
-  };
+    };
+  }
 
-  return (
-    <div className="container mt-5">
-      <h1 className="mb-4">EndPoint Data</h1>
-      <form onSubmit={handleSubmit} className="border p-4 shadow-sm bg-white">
-        <div className="form-group mb-3">
-          <label htmlFor="method">Method</label>
-          <select
-            id="method"
-            name="method"
-            className="form-control"
-            value={method}
-            onChange={handleChange}
-          >
-            <option value="POST">POST</option>
-            <option value="GET">GET</option>
-          </select>
-        </div>
-        <div className="form-group mb-3">
-          <label htmlFor="url">URL</label>
-          <input
-            type="text"
-            id="url"
-            name="url"
-            className="form-control"
-            value={url}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group mb-3">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className="form-control"
-            value={body.email}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group mb-3">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            className="form-control"
-            value={body.password}
-            onChange={handleChange}
-          />
-        </div>
-        <button type="submit" className="btn btn-primary" disabled={isLoading}>
-          {isLoading ? 'Sending...' : 'Send Data'}
-        </button>
-      </form>
-      {error && <div className="alert alert-danger mt-3">Error: {error.message}</div>}
-      {responseData && <ResponseDisplay data={responseData} />}
-    </div>
-  );
-}
+    return (
+      <div className="container mt-5">
+        <h1 className="mb-4">EndPoint Data</h1>
+        <form onSubmit={handleSubmit} className="border p-4 shadow-sm bg-white">
+          <div className="form-group mb-3">
+            <label htmlFor="method">Method</label>
+            <select
+              id="method"
+              name="method"
+              className="form-control"
+              value={method}
+              onChange={handleChange}
+            >
+              <option value="POST">POST</option>
+              <option value="GET">GET</option>
+            </select>
+          </div>
+          <div className="form-group mb-3">
+            <label htmlFor="url">URL</label>
+            <input
+              type="text"
+              id="url"
+              name="url"
+              className="form-control"
+              value={url}
+              onChange={handleChange}
+            />
+          </div>
+          
+          <button type="submit" className="btn btn-primary" disabled={isLoading}>
+            {isLoading ? 'Sending...' : 'Send Data'}
+          </button>
+        </form>
+        {error && <div className="alert alert-danger mt-3">Error: {error.message}</div>}
+        {responseData && <ResponseDisplay data={responseData} />}
+      </div>
+    );
+  }
 
-export default EndPointData;
+  export default EndPointData;
