@@ -34,7 +34,7 @@ function Login() {
         // Save the token in the cookies
         Cookies.set('token', responseData.token);
         // Redirect to the dashboard
-        window.location.href = 'http://localhost:5173/dashboard';
+        window.location.href = 'http://localhost:5173/';
       } else {
         setErrorMessage(responseData.message || 'An error occurred during login');
       }
