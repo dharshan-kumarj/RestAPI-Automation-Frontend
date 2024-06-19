@@ -1,8 +1,10 @@
+// Main.js (or Main.tsx)
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import SelectWorkSpace from "../components/SelectWorkSpace";
 import TestCases from "../components/TestCases";
+import WorkSpaceDisplay from "../components/WorkSpaceDisplay";
 
 function Main() {
     const [token, setToken] = useState("");
@@ -77,11 +79,12 @@ function Main() {
             </>
         );
     }
-    console.log(testCases)
+
     return (
         <div>
             <h1>Main Component {workspace_id}</h1>
             <TestCases testCases={testCases} setTestCases={setTestCases} />
+            <WorkSpaceDisplay token={token} workspace_id={workspace_id} />
         </div>
     );
 }
