@@ -1,15 +1,14 @@
-// WorkSpaceDisplay.js (or WorkSpaceDisplay.tsx)
 import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 
-const WorkSpaceDisplay = ({ token, workspace_id }) => {
-  const [storagePaths, setStoragePaths] = useState([]);
+const WorkSpaceDisplay = ({ token, workspace_id, setHeaders, setBody, setTestCases }) => {
+  const [requests, setRequests] = useState([]);
 
   useEffect(() => {
     const fetchWorkspaceData = async () => {
       try {
-        const response = await axios.post('http://localhost:8000/get-workspace', 
+        const response = await axios.post(
+          'http://localhost:8000/get-workspace',
           { workspace_id },
           {
             headers: {
@@ -17,9 +16,8 @@ const WorkSpaceDisplay = ({ token, workspace_id }) => {
             },
           }
         );
-        if (response.data.valid && response.data.workspace_id) {
-          const paths = response.data.workspace_id.storage.map(item => item.path);
-          setStoragePaths(paths);
+        if (response.data.valid && response.data.requests) {
+          setRequests(response.data.requests);
         }
       } catch (error) {
         console.error('Error fetching workspace data:', error);
@@ -31,14 +29,37 @@ const WorkSpaceDisplay = ({ token, workspace_id }) => {
     }
   }, [token, workspace_id]);
 
+  const handleClick = async (_id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/get-workspace-details/${workspace_id}/${_id}`,
+        {
+          headers: {
+            Token: token,
+          },
+        }
+      );
+      if (response.data.valid && response.data.request_data) {
+        const { request_data } = response.data;
+        // Set headers, body, and test cases here
+        setHeaders({ ...request_data.request.headers });
+        setBody({ ...request_data.request });
+        setTestCases([...request_data.test_cases]);
+      }
+      console.log(response.data.request_data)
+    } catch (error) {
+      console.error('Error fetching workspace details:', error);
+    }
+  };
+
   return (
     <div className="card" style={{ position: 'fixed', top: '20px', left: '10px', width: '300px', height: '400px', overflowY: 'auto' }}>
       <div className="card-body">
-        <h5 className="card-title">Workspace Storage Paths</h5>
+        <h5 className="card-title">Workspace Paths</h5>
         <ul className="list-group mb-3">
-          {storagePaths.map((path, index) => (
-            <li key={index} className="list-group-item">
-              {path}
+          {requests.map((request, index) => (
+            <li key={index} className="list-group-item" onClick={() => handleClick(request._id)} style={{ cursor: 'pointer' }}>
+              {request.path}
             </li>
           ))}
         </ul>

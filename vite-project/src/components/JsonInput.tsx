@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-const JsonInput = ({ onJsonParsed }) => {
-  const [jsonInput, setJsonInput] = useState('');
+const JsonInput = ({initJson, onJsonParsed }) => {
+  const [jsonInput, setJsonInput] = useState(JSON.stringify(initJson));
   const [parsedJson, setParsedJson] = useState(null);
   const [error, setError] = useState('');
-
+  console.log(initJson)
   const handleInputChange = (e) => {
     setJsonInput(e.target.value);
   };

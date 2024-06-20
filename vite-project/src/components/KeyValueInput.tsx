@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const KeyValueInput = ({ onObjectParsed }) => {
+const KeyValueInput = ({ initObjectParsed, onObjectParsed }) => {
   const [keyValuePairs, setKeyValuePairs] = useState([{ key: '', value: '' }]);
   const [parsedObject, setParsedObject] = useState(null);
+
+  useEffect(() => {
+    // Initialize key-value pairs when initObjectParsed changes
+    if (initObjectParsed) {
+      const pairs = Object.entries(initObjectParsed).map(([key, value]) => ({ key, value }));
+      setKeyValuePairs(pairs);
+    }
+  }, [initObjectParsed]);
 
   const handleInputChange = (index, field, value) => {
     const newKeyValuePairs = [...keyValuePairs];

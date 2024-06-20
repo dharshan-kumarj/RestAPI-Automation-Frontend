@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ResponseDisplay from './ResponseDisplay';
 
-function EndPointData({ token, headers, body, testCases }) {
-  const [method, setMethod] = useState('POST');
-  const [url, setUrl] = useState('http://localhost:8000/fetch-one');
+function EndPointData({ initialMethod, initialUrl, token, headers, body, testCases }) {
+  const [method, setMethod] = useState(initialMethod); // Initialize method with prop value
+  const [url, setUrl] = useState(initialUrl); // Initialize url with prop value
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [responseData, setResponseData] = useState(null);
@@ -23,11 +23,12 @@ function EndPointData({ token, headers, body, testCases }) {
     };
 
     try {
-      const response = await fetch("http://localhost:8000/fetch-one", {
-        method:"POST",
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
           'Token': token,
+          ...headers, // Assuming headers is an object with additional headers
         },
         body: JSON.stringify(requestData),
       });
@@ -53,46 +54,46 @@ function EndPointData({ token, headers, body, testCases }) {
       setMethod(value);
     } else if (name === 'url') {
       setUrl(value);
-    };
-  }
+    }
+  };
 
-    return (
-      <div className="container mt-5">
-        <h1 className="mb-4">EndPoint Data</h1>
-        <form onSubmit={handleSubmit} className="border p-4 shadow-sm bg-white">
-          <div className="form-group mb-3">
-            <label htmlFor="method">Method</label>
-            <select
-              id="method"
-              name="method"
-              className="form-control"
-              value={method}
-              onChange={handleChange}
-            >
-              <option value="POST">POST</option>
-              <option value="GET">GET</option>
-            </select>
-          </div>
-          <div className="form-group mb-3">
-            <label htmlFor="url">URL</label>
-            <input
-              type="text"
-              id="url"
-              name="url"
-              className="form-control"
-              value={url}
-              onChange={handleChange}
-            />
-          </div>
-          
-          <button type="submit" className="btn btn-primary" disabled={isLoading}>
-            {isLoading ? 'Sending...' : 'Send Data'}
-          </button>
-        </form>
-        {error && <div className="alert alert-danger mt-3">Error: {error.message}</div>}
-        {responseData && <ResponseDisplay data={responseData} />}
-      </div>
-    );
-  }
+  return (
+    <div className="container mt-5">
+      <h1 className="mb-4">EndPoint Data</h1>
+      <form onSubmit={handleSubmit} className="border p-4 shadow-sm bg-white">
+        <div className="form-group mb-3">
+          <label htmlFor="method">Method</label>
+          <select
+            id="method"
+            name="method"
+            className="form-control"
+            value={method}
+            onChange={handleChange}
+          >
+            <option value="POST">POST</option>
+            <option value="GET">GET</option>
+          </select>
+        </div>
+        <div className="form-group mb-3">
+          <label htmlFor="url">URL</label>
+          <input
+            type="text"
+            id="url"
+            name="url"
+            className="form-control"
+            value={url}
+            onChange={handleChange}
+          />
+        </div>
 
-  export default EndPointData;
+        <button type="submit" className="btn btn-primary" disabled={isLoading}>
+          {isLoading ? 'Sending...' : 'Send Data'}
+        </button>
+      </form>
+      {error && <div className="alert alert-danger mt-3">Error: {error.message}</div>}
+      {responseData && <ResponseDisplay data={responseData} />}
+    </div>
+  );
+}
+
+export default EndPointData;
