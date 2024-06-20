@@ -21,3 +21,13 @@
     color: #fff;
     font-size: 18px;
   }
+
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .react-flow__container {
+    height: 100%;
+  }
