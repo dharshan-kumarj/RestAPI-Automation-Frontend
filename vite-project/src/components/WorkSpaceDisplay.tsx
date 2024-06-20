@@ -1,14 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const WorkSpaceDisplay = ({ token, workspace_id, setHeaders, setBody, setTestCases }) => {
+const WorkSpaceDisplay = ({
+  token,
+  workspace_id,
+  setHeaders,
+  setBody,
+  setTestCases,
+  setUrl,
+  setMethod,
+}) => {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
     const fetchWorkspaceData = async () => {
       try {
         const response = await axios.post(
-          'http://localhost:8000/get-workspace',
+          "http://localhost:8000/get-workspace",
           { workspace_id },
           {
             headers: {
@@ -20,7 +28,7 @@ const WorkSpaceDisplay = ({ token, workspace_id, setHeaders, setBody, setTestCas
           setRequests(response.data.requests);
         }
       } catch (error) {
-        console.error('Error fetching workspace data:', error);
+        console.error("Error fetching workspace data:", error);
       }
     };
 
@@ -41,24 +49,41 @@ const WorkSpaceDisplay = ({ token, workspace_id, setHeaders, setBody, setTestCas
       );
       if (response.data.valid && response.data.request_data) {
         const { request_data } = response.data;
-        // Set headers, body, and test cases here
+        console.log(request_data)
+        // Set headers, body, test cases, url, and method here
         setHeaders({ ...request_data.request.headers });
-        setBody({ ...request_data.request });
-        setTestCases([...request_data.test_cases]);
+        setBody({ ...request_data.request.body });
+        setTestCases([...request_data.request.test_cases]);
+        setUrl(request_data.request.url);
+        setMethod(request_data.request.method);
       }
-      console.log(response.data.request_data)
     } catch (error) {
-      console.error('Error fetching workspace details:', error);
+      console.error("Error fetching workspace details:", error);
     }
   };
 
   return (
-    <div className="card" style={{ position: 'fixed', top: '20px', left: '10px', width: '300px', height: '400px', overflowY: 'auto' }}>
+    <div
+      className="card"
+      style={{
+        position: "fixed",
+        top: "20px",
+        left: "10px",
+        width: "300px",
+        height: "400px",
+        overflowY: "auto",
+      }}
+    >
       <div className="card-body">
         <h5 className="card-title">Workspace Paths</h5>
         <ul className="list-group mb-3">
           {requests.map((request, index) => (
-            <li key={index} className="list-group-item" onClick={() => handleClick(request._id)} style={{ cursor: 'pointer' }}>
+            <li
+              key={index}
+              className="list-group-item"
+              onClick={() => handleClick(request._id)}
+              style={{ cursor: "pointer" }}
+            >
               {request.path}
             </li>
           ))}

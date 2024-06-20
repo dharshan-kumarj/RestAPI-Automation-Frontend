@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const JsonInput = ({initJson, onJsonParsed }) => {
+const JsonInput = ({ initJson, onJsonParsed }) => {
   const [jsonInput, setJsonInput] = useState(JSON.stringify(initJson));
-  const [parsedJson, setParsedJson] = useState(null);
+  const [parsedJson, setParsedJson] = useState(initJson);
   const [error, setError] = useState('');
-  console.log(initJson)
+
+  // Use useEffect to update the jsonInput when initJson changes
+  useEffect(() => {
+    setJsonInput(JSON.stringify(initJson, null, 2));
+    setParsedJson(initJson);
+    setError('');
+  }, [initJson]);
+
   const handleInputChange = (e) => {
     setJsonInput(e.target.value);
   };

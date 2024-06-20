@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
-const KeyValueInput = ({ initObjectParsed, onObjectParsed }) => {
-  const [keyValuePairs, setKeyValuePairs] = useState([{ key: '', value: '' }]);
-  const [parsedObject, setParsedObject] = useState(null);
+const KeyValueInput = ({ headers, onObjectParsed }) => {
+  const [keyValuePairs, setKeyValuePairs] = useState([]);
 
+  // Initialize state with default headers if provided
   useEffect(() => {
-    // Initialize key-value pairs when initObjectParsed changes
-    if (initObjectParsed) {
-      const pairs = Object.entries(initObjectParsed).map(([key, value]) => ({ key, value }));
-      setKeyValuePairs(pairs);
+    if (headers) {
+      const initialPairs = Object.keys(headers).map(key => ({ key, value: headers[key] }));
+      setKeyValuePairs(initialPairs);
     }
-  }, [initObjectParsed]);
+  }, [headers]);
 
   const handleInputChange = (index, field, value) => {
     const newKeyValuePairs = [...keyValuePairs];
@@ -34,7 +33,6 @@ const KeyValueInput = ({ initObjectParsed, onObjectParsed }) => {
         obj[pair.key] = pair.value;
       }
     });
-    setParsedObject(obj);
     onObjectParsed(obj); // Pass the parsed object back to the parent
   };
 
@@ -68,11 +66,6 @@ const KeyValueInput = ({ initObjectParsed, onObjectParsed }) => {
       <button className="btn btn-secondary mt-2" onClick={handleAddPair}>Add Pair</button>
       <br />
       <button className="btn btn-primary mt-2" onClick={handleParseObject}>Parse Object</button>
-      {parsedObject && (
-        <pre className="bg-light p-3 mt-3 border rounded">
-          {JSON.stringify(parsedObject, null, 2)}
-        </pre>
-      )}
     </div>
   );
 };

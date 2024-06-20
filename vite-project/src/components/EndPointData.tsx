@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ResponseDisplay from './ResponseDisplay';
 
-function EndPointData({ initialMethod, initialUrl, token, headers, body, testCases }) {
-  const [method, setMethod] = useState(initialMethod); // Initialize method with prop value
-  const [url, setUrl] = useState(initialUrl); // Initialize url with prop value
+function EndPointData({ method, url,setUrl,setMethod, token, headers, body, testCases }) {
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [responseData, setResponseData] = useState(null);
@@ -39,7 +38,6 @@ function EndPointData({ initialMethod, initialUrl, token, headers, body, testCas
 
       const data = await response.json();
       setResponseData(data);
-      console.log('Response data:', data);
     } catch (error) {
       setError(error instanceof Error ? error : new Error('An error occurred'));
     } finally {

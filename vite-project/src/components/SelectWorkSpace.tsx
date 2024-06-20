@@ -32,7 +32,7 @@ function SelectWorkspace(props) {
 
         fetchWorkspaces();
     }, [token]);
-
+    
     const createWorkspace = async () => {
         try {
             const response = await fetch('http://localhost:8000/create-workspace', {
@@ -49,7 +49,6 @@ function SelectWorkspace(props) {
             }
 
             const data = await response.json();
-            console.log('Workspace created:', data);
         } catch (error) {
             console.error('Error creating workspace:', error);
         }

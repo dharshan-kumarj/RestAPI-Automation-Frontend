@@ -1,16 +1,24 @@
-import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useEffect, useState } from "react";
 
 const TestCases = ({ testCases, setTestCases }) => {
   const [newTestCase, setNewTestCase] = useState({
-    "case": "",
-    "data": "",
-    "imp": false,
-    "chack_previous_case": false
+    case: "",
+    data: "",
+    imp: false,
+    chack_previous_case: false,
   });
 
+  useEffect(() => {
+    setNewTestCase({
+      case: "",
+      data: "",
+      imp: false,
+      chack_previous_case: false,
+    });
+  }, [testCases]);
+
   const toggleImportance = (index) => {
-    const updatedTestCases = testCases.map((testCase, i) => 
+    const updatedTestCases = testCases.map((testCase, i) =>
       i === index ? { ...testCase, imp: !testCase.imp } : testCase
     );
     setTestCases(updatedTestCases);
@@ -20,7 +28,7 @@ const TestCases = ({ testCases, setTestCases }) => {
     const { name, value, type, checked } = e.target;
     setNewTestCase({
       ...newTestCase,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -29,15 +37,15 @@ const TestCases = ({ testCases, setTestCases }) => {
 
     const formattedTestCase = {
       ...newTestCase,
-      data: parseData(newTestCase.data)
+      data: parseData(newTestCase.data),
     };
 
     setTestCases([...testCases, formattedTestCase]);
     setNewTestCase({
-      "case": "",
-      "data": "",
-      "imp": false,
-      "chack_previous_case": false
+      case: "",
+      data: "",
+      imp: false,
+      chack_previous_case: false,
     });
   };
 
@@ -55,7 +63,17 @@ const TestCases = ({ testCases, setTestCases }) => {
   };
 
   return (
-    <div className="card" style={{ position: 'fixed', top: '20px', right: '20px', width: '300px', height: '400px', overflowY: 'auto' }}>
+    <div
+      className="card"
+      style={{
+        position: "fixed",
+        top: "20px",
+        right: "20px",
+        width: "300px",
+        height: "400px",
+        overflowY: "auto",
+      }}
+    >
       <div className="card-body">
         <h5 className="card-title">Test Cases</h5>
         <ul className="list-group mb-3">
@@ -63,16 +81,23 @@ const TestCases = ({ testCases, setTestCases }) => {
             <li key={index} className="list-group-item">
               <strong>Case:</strong> {testCase.case} <br />
               <strong>Data:</strong> {JSON.stringify(testCase.data)} <br />
-              <strong>Important:</strong> {testCase.imp ? 'Yes' : 'No'} <br />
+              <strong>Important:</strong> {testCase.imp ? "Yes" : "No"} <br />
               {testCase.chack_previous_case !== undefined && (
                 <>
-                  <strong>Check Previous Case:</strong> {testCase.chack_previous_case ? 'Yes' : 'No'} <br />
+                  <strong>Check Previous Case:</strong>{" "}
+                  {testCase.chack_previous_case ? "Yes" : "No"} <br />
                 </>
               )}
-              <button className="btn btn-sm btn-primary mr-2" onClick={() => toggleImportance(index)}>
-                {testCase.imp ? 'Unmark Important' : 'Mark Important'}
+              <button
+                className="btn btn-sm btn-primary mr-2"
+                onClick={() => toggleImportance(index)}
+              >
+                {testCase.imp ? "Unmark Important" : "Mark Important"}
               </button>
-              <button className="btn btn-sm btn-danger" onClick={() => deleteTestCase(index)}>
+              <button
+                className="btn btn-sm btn-danger"
+                onClick={() => deleteTestCase(index)}
+              >
                 Delete
               </button>
             </li>
@@ -84,40 +109,41 @@ const TestCases = ({ testCases, setTestCases }) => {
             type="text"
             name="case"
             className="form-control"
-            placeholder="Case"
+            placeholder="Case Name"
             value={newTestCase.case}
             onChange={handleInputChange}
           />
         </div>
         <div className="form-group">
-          <input
-            type="text"
+          <textarea
             name="data"
             className="form-control"
-            placeholder="Data (JSON or String)"
+            placeholder="Data (JSON or Text)"
             value={newTestCase.data}
             onChange={handleInputChange}
           />
         </div>
-        <div className="form-group form-check">
-          <input
-            type="checkbox"
-            name="imp"
-            className="form-check-input"
-            checked={newTestCase.imp}
-            onChange={handleInputChange}
-          />
-          <label className="form-check-label">Important</label>
+        <div className="form-group">
+          <label>
+            <input
+              type="checkbox"
+              name="imp"
+              checked={newTestCase.imp}
+              onChange={handleInputChange}
+            />{" "}
+            Important
+          </label>
         </div>
-        <div className="form-group form-check">
-          <input
-            type="checkbox"
-            name="chack_previous_case"
-            className="form-check-input"
-            checked={newTestCase.chack_previous_case}
-            onChange={handleInputChange}
-          />
-          <label className="form-check-label">Check Previous Case</label>
+        <div className="form-group">
+          <label>
+            <input
+              type="checkbox"
+              name="chack_previous_case"
+              checked={newTestCase.chack_previous_case}
+              onChange={handleInputChange}
+            />{" "}
+            Check Previous Case
+          </label>
         </div>
         <button className="btn btn-primary" onClick={addTestCase}>
           Add Test Case
@@ -125,6 +151,6 @@ const TestCases = ({ testCases, setTestCases }) => {
       </div>
     </div>
   );
-}
+};
 
 export default TestCases;
