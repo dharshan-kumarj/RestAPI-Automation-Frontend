@@ -13,7 +13,7 @@ function Main() {
   const [searchParams] = useSearchParams();
   const workspace_id = searchParams.get("workspace");
   const [testCases, setTestCases] = useState([]);
-  const [headers, setHeaders] = useState({"test55":"hello"});
+  const [headers, setHeaders] = useState({ test55: "hello" });
   const [body, setBody] = useState({});
   const [method, setMethod] = useState("POST");
   const [url, setUrl] = useState("");
@@ -41,6 +41,40 @@ function Main() {
   if (!workspace_id) {
     return <SelectWorkSpace token={token} />;
   }
+  // Function to handle saving to workspace
+  const handleSaveToWorkspace = async (path) => {
+    const saveData = {
+      workspace_id: workspace_id,
+      request: {
+        method: method,
+        url: url,
+        headers: headers,
+        body: body,
+        test_cases: testCases,
+      },
+      path: path,
+    };
+
+    try {
+      const response = await fetch("http://localhost:8000/save-to-workspace", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Token: token,
+        },
+        body: JSON.stringify(saveData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save to workspace");
+      }
+
+      alert("Saved to workspace successfully!");
+    } catch (error) {
+      console.error("Error saving to workspace:", error);
+      alert("Failed to save to workspace");
+    }
+  };
 
   return (
     <div style={{ marginLeft: 300, marginRight: 300 }}>
@@ -50,7 +84,6 @@ function Main() {
 
       <TestCases testCases={testCases} setTestCases={setTestCases} />
       <EndPointData
-
         method={method}
         url={url}
         setMethod={setMethod}
@@ -59,6 +92,8 @@ function Main() {
         headers={headers}
         body={body}
         testCases={testCases}
+        workspace_id={workspace_id}
+        
       />
       <WorkSpaceDisplay
         token={token}

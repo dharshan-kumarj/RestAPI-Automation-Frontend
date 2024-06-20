@@ -2,11 +2,58 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ResponseDisplay from './ResponseDisplay';
 
-function EndPointData({ method, url,setUrl,setMethod, token, headers, body, testCases }) {
+function EndPointData({ method, url,setUrl,setMethod, token, headers, body, testCases,workspace_id }) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [responseData, setResponseData] = useState(null);
+  const [path, setPath] = useState(''); // State to store the user input for path
+
+  const handleSaveToWorkspace = async () => {
+    if (!path) {
+      alert('Please enter a path before saving.');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    const saveData = {
+      workspace_id: workspace_id, // Replace with actual workspace_id
+      request: {
+        method,
+        url,
+        headers,
+        body,
+        test_cases: testCases,
+      },
+      path: `/${path}` // Prepend '/' to path
+    };
+    console.log(saveData)
+    try {
+      const response = await fetch('http://localhost:8000/save-to-workspace', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Token': token,
+         // Assuming headers is an object with additional headers
+        },
+        body: JSON.stringify(saveData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save data to workspace');
+      }
+
+      const data = await response.json();
+      console.log('Saved to workspace:', data);
+      alert('Data saved to workspace successfully!');
+    } catch (error) {
+      setError(error instanceof Error ? error : new Error('An error occurred'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,6 +99,8 @@ function EndPointData({ method, url,setUrl,setMethod, token, headers, body, test
       setMethod(value);
     } else if (name === 'url') {
       setUrl(value);
+    }else if (name=='path'){
+      setPath(value)
     }
   };
 
@@ -83,9 +132,22 @@ function EndPointData({ method, url,setUrl,setMethod, token, headers, body, test
             onChange={handleChange}
           />
         </div>
-
+        <div className="form-group mb-3">
+          <label htmlFor="path">Save as</label>
+          <input
+            type="text"
+            id="path"
+            name="path"
+            className="form-control"
+            value={path}
+            onChange={handleChange}
+          />
+        </div>
         <button type="submit" className="btn btn-primary" disabled={isLoading}>
           {isLoading ? 'Sending...' : 'Send Data'}
+        </button>
+        <button type="button" className="btn btn-success" onClick={handleSaveToWorkspace} disabled={isLoading}>
+          Save to Workspace
         </button>
       </form>
       {error && <div className="alert alert-danger mt-3">Error: {error.message}</div>}
