@@ -13,7 +13,7 @@ function Main() {
   const [searchParams] = useSearchParams();
   const workspace_id = searchParams.get("workspace");
   const [testCases, setTestCases] = useState([]);
-  const [headers, setHeaders] = useState({ test55: "hello" });
+  const [headers, setHeaders] = useState({ });
   const [body, setBody] = useState({});
   const [method, setMethod] = useState("POST");
   const [url, setUrl] = useState("");
