@@ -13,11 +13,11 @@ function Main() {
   const [searchParams] = useSearchParams();
   const workspace_id = searchParams.get("workspace");
   const [testCases, setTestCases] = useState([]);
-  const [headers, setHeaders] = useState({ Token: "jdkash" });
+  const [headers, setHeaders] = useState({  });
   const [body, setBody] = useState({});
 
   const [method, setMethod] = useState("POST");
-  const [url, setUrl] = useState("http://localhost:8000/fetch-one");
+  const [url, setUrl] = useState("");
   const checkToken = async () => {
     const token = Cookies.get("token");
 

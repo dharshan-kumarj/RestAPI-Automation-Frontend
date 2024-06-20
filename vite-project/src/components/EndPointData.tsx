@@ -23,12 +23,12 @@ function EndPointData({ initialMethod, initialUrl, token, headers, body, testCas
     };
 
     try {
-      const response = await fetch(url, {
-        method,
+      const response = await fetch("http://localhost:8000/fetch-one", {
+        method:"POST",
         headers: {
           'Content-Type': 'application/json',
           'Token': token,
-          ...headers, // Assuming headers is an object with additional headers
+           // Assuming headers is an object with additional headers
         },
         body: JSON.stringify(requestData),
       });
