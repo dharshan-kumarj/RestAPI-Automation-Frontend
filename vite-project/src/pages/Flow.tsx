@@ -4,7 +4,6 @@ import ReactFlow, {
   Background,
   applyNodeChanges,
   applyEdgeChanges,
-  addEdge,
   NodeChange,
   EdgeChange,
   Connection,
@@ -18,25 +17,35 @@ import 'reactflow/dist/style.css';
 
 const buttonNodeId = 'button-node';
 
-const CustomNode = memo(({ data }: { data: any }) => (
-  <>
-    <Handle type="target" position={Position.Left} />
-    <div style={{ padding: '10px', background: '#f0f0f0', borderRadius: '5px', minWidth: '250px' }}>
-      <select defaultValue="GET" style={{ width: '100%', marginBottom: '5px' }}>
-        <option value="GET">GET</option>
-        <option value="POST">POST</option>
-      </select>
-      <input type="text" placeholder="URL" style={{ width: '100%', marginBottom: '5px' }} />
-      <input type="text" placeholder="Test cases" style={{ width: '70%', marginBottom: '5px' }} />
-      <button style={{ width: '28%', marginLeft: '2%' }}>Send()</button>
-      <div>
-        <button style={{ width: '49%', background: 'green', color: 'white' }}>Success()</button>
-        <button style={{ width: '49%', marginLeft: '2%', background: 'red', color: 'white' }}>Failure()</button>
+const CustomNode = memo(({ data, id }: { data: any; id: string }) => {
+  const onTrueClick = () => {
+    data.onButtonClick(id, true);
+  };
+
+  const onFalseClick = () => {
+    data.onButtonClick(id, false);
+  };
+
+  return (
+    <>
+      <Handle type="target" position={Position.Left} />
+      <div style={{ padding: '10px', background: '#f0f0f0', borderRadius: '5px', minWidth: '250px' }}>
+        <select defaultValue="GET" style={{ width: '100%', marginBottom: '5px' }}>
+          <option value="GET">GET</option>
+          <option value="POST">POST</option>
+        </select>
+        <input type="text" placeholder="URL" style={{ width: '100%', marginBottom: '5px' }} />
+        <input type="text" placeholder="Test cases" style={{ width: '70%', marginBottom: '5px' }} />
+        <button style={{ width: '28%', marginLeft: '2%' }}>Send()</button>
+        <div>
+          <button style={{ width: '49%', background: 'green', color: 'white' }} onClick={onTrueClick}>True()</button>
+          <button style={{ width: '49%', marginLeft: '2%', background: 'red', color: 'white' }} onClick={onFalseClick}>False()</button>
+        </div>
       </div>
-    </div>
-    <Handle type="source" position={Position.Right} />
-  </>
-));
+      <Handle type="source" position={Position.Right} />
+    </>
+  );
+});
 
 const nodeTypes = {
   custom: CustomNode,
@@ -77,9 +86,38 @@ function Flow() {
   );
 
   const onConnect = useCallback(
-    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
+    (params: Edge | Connection) => setEdges((eds) => [...eds, params as Edge]),
     [],
   );
+
+  const createNewNode = useCallback((parentId: string, isTrue: boolean) => {
+    const newNodeId = `node-${nodeIdCounter.current}`;
+    nodeIdCounter.current += 1;
+
+    const parentNode = nodes.find(node => node.id === parentId);
+    if (!parentNode) return;
+
+    const newNode: Node = {
+      id: newNodeId,
+      type: 'custom',
+      data: { label: `Node ${newNodeId}`, onButtonClick: createNewNode },
+      position: {
+        x: parentNode.position.x + 300,
+        y: parentNode.position.y + (isTrue ? -75 : 75)
+      },
+    };
+
+    const newEdge: Edge = {
+      id: `edge-${parentId}-${newNodeId}`,
+      source: parentId,
+      target: newNodeId,
+      label: isTrue ? 'True' : 'False',
+      style: { stroke: isTrue ? 'green' : 'red' },
+    };
+
+    setNodes((nds) => [...nds, newNode]);
+    setEdges((eds) => [...eds, newEdge]);
+  }, [nodes]);
 
   const addNewNode = useCallback(() => {
     const newNodeId = `node-${nodeIdCounter.current}`;
@@ -88,19 +126,12 @@ function Flow() {
     const newNode: Node = {
       id: newNodeId,
       type: 'custom',
-      data: { label: `Node ${newNodeId}` },
+      data: { label: `Node ${newNodeId}`, onButtonClick: createNewNode },
       position: { x: 200, y: 50 + (nodes.length - 1) * 150 },
     };
 
-    const newEdge: Edge = {
-      id: `edge-${buttonNodeId}-${newNodeId}`,
-      source: buttonNodeId,
-      target: newNodeId,
-    };
-
     setNodes((nds) => [...nds, newNode]);
-    setEdges((eds) => [...eds, newEdge]);
-  }, [nodes]);
+  }, [createNewNode]);
 
   const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
     if (node.id === buttonNodeId) {
