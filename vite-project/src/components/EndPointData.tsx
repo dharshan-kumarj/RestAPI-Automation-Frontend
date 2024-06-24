@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ResponseDisplay from './ResponseDisplay';
+import Zelerius from '../assets/zelerius.svg';
 
 function EndPointData({ method, url,setUrl,setMethod, token, headers, body, testCases,workspace_id }) {
 
@@ -105,54 +106,85 @@ function EndPointData({ method, url,setUrl,setMethod, token, headers, body, test
   };
 
   return (
-    <div className="container mt-5">
-      <h1 className="mb-4">EndPoint Data</h1>
-      <form onSubmit={handleSubmit} className="border p-4 shadow-sm bg-white">
-        <div className="form-group mb-3">
-          <label htmlFor="method">Method</label>
-          <select
-            id="method"
-            name="method"
-            className="form-control"
-            value={method}
+    <div className="container-fluid bg-dark text-light py-3">
+    <div className="row justify-content-center">
+      <div className="col-12 col-md-10 col-lg-8">
+        <h1 className="mb-4">
+          {/* <svg width="24" height="24" className="me-2">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="currentColor"/>
+          </svg> */}
+           <img src={Zelerius} className='me-2' alt="Logo" />
+          Zelerius API
+        </h1>
+        <form onSubmit={handleSubmit} className="mb-3">
+        <div className="d-flex align-items-center mb-3">
+          <div className="me-2">
+            <select
+              className="btn btn-success dropdown-toggle"
+              id="method"
+              name="method"
+              value={method}
+              onChange={handleChange}
+            >
+              <option value="GET">GET</option>
+              <option value="POST">POST</option>
+              <option value="DELETE">DELETE</option>
+              <option value="PUT">PUT</option>
+            </select>
+          </div>
+          <input 
+            type="text" 
+            className="form-control bg-dark text-light border-white" 
+            id="url" 
+            name="url" 
+            value={url} 
             onChange={handleChange}
+            style={{ borderColor: 'white' }}
+          />
+        </div>
+        <div className="mb-3 position-relative">
+          <input 
+            type="text" 
+            className="form-control bg-dark text-white"
+            id="path" 
+            name="path" 
+            value={path} 
+            onChange={handleChange}
+            placeholder="Enter name to save"
+            style={{ paddingLeft: '80px' }}
+          />
+          <span 
+            className="position-absolute bg-white text-dark"
+            style={{ 
+              left: '5px', 
+              top: '30%', 
+              transform: 'translateY(-50%)',
+              padding: '2px 8px',
+              borderRadius: '6px',
+              fontSize: '14px',
+              pointerEvents: 'none'
+            }}
           >
-            <option value="POST">POST</option>
-            <option value="GET">GET</option>
-          </select>
+            Save as:
+          </span>
+          <small className="form-text text-muted">
+            Enter a name to save this endpoint for future use in your workspace.
+          </small>
         </div>
-        <div className="form-group mb-3">
-          <label htmlFor="url">URL</label>
-          <input
-            type="text"
-            id="url"
-            name="url"
-            className="form-control"
-            value={url}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group mb-3">
-          <label htmlFor="path">Save as</label>
-          <input
-            type="text"
-            id="path"
-            name="path"
-            className="form-control"
-            value={path}
-            onChange={handleChange}
-          />
-        </div>
-        <button type="submit" className="btn btn-primary" disabled={isLoading}>
-          {isLoading ? 'Sending...' : 'Send Data'}
-        </button>
-        <button type="button" className="btn btn-success" onClick={handleSaveToWorkspace} disabled={isLoading}>
-          Save to Workspace
-        </button>
-      </form>
-      {error && <div className="alert alert-danger mt-3">Error: {error.message}</div>}
-      {responseData && <ResponseDisplay data={responseData} />}
+          <div className="d-grid gap-2 d-md-flex justify-content-md-start">
+            <button type="submit" className="btn btn-danger" disabled={isLoading}>
+              {isLoading ? 'Sending...' : 'Send Data'}
+            </button>
+            <button type="button" className="btn btn-success" onClick={handleSaveToWorkspace} disabled={isLoading}>
+              Save to Workspace
+            </button>
+          </div>
+        </form>
+        {error && <div className="alert alert-danger mt-3">Error: {error.message}</div>}
+        {responseData && <ResponseDisplay data={responseData} />}
+      </div>
     </div>
+  </div>
   );
 }
 
