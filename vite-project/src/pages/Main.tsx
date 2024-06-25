@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import SelectWorkSpace from "../components/SelectWorkSpace";
@@ -16,26 +16,28 @@ interface TestCase {
   check_previous_case?: boolean;
 }
 
-const styles = {
-  mainContainer: {
-    display: 'flex',
-    flexDirection: 'column' as 'column',
-    height: '100vh',
-    marginLeft: 300,
-    marginRight: 300,
-  },
-  contentArea: {
-    flex: 1,
-    overflowY: 'auto' as 'auto',
-  },
-  responseArea: {
-    height: '400px',
-    borderTop: '1px solid #ccc',
-    backgroundColor: '#1e1e1e',
-    color: 'white',
-    overflowY: 'auto' as 'auto',
-  },
-};
+const Resizer = ({ onResize }) => (
+  <div
+    style={{
+      height: '8px',
+      cursor: 'row-resize',
+      backgroundColor: '#e0e0e0',
+      borderTop: '1px solid #ccc',
+      borderBottom: '1px solid #ccc',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+    onMouseDown={onResize}
+  >
+    <div style={{
+      width: '30px',
+      height: '4px',
+      backgroundColor: '#888',
+      borderRadius: '2px',
+    }} />
+  </div>
+);
 
 function Main() {
   const [token, setToken] = useState<string>("");
@@ -51,6 +53,29 @@ function Main() {
   const [responseData, setResponseData] = useState<any>(null);
   const [aiAnalysis, setAiAnalysis] = useState<string>("");
   const [testCaseResults, setTestCaseResults] = useState<any>(null);
+  const [responseAreaHeight, setResponseAreaHeight] = useState(400);
+  const contentRef = useRef(null);
+
+  const styles = {
+    mainContainer: {
+      display: 'flex',
+      flexDirection: 'column' as 'column',
+      height: '100vh',
+      marginLeft: 300,
+      marginRight: 300,
+    },
+    contentArea: {
+      flex: 1,
+      overflowY: 'auto' as 'auto',
+      minHeight: '200px',
+    },
+    responseArea: {
+      height: `${responseAreaHeight}px`,
+      backgroundColor: '#1e1e1e',
+      color: 'white',
+      overflowY: 'auto' as 'auto',
+    },
+  };
 
   const checkToken = async () => {
     const token = Cookies.get("token");
@@ -113,17 +138,39 @@ function Main() {
 
   const handleResponse = (data: any) => {
     setResponseData(data.response);
-    // Ensure aiAnalysis is set as a string
     setAiAnalysis(typeof data.ai_analysis === 'object' 
       ? JSON.stringify(data.ai_analysis, null, 2) 
       : data.ai_analysis);
     setTestCaseResults(data.test_result);
   };
 
+  const handleResize = (mouseDownEvent) => {
+    mouseDownEvent.preventDefault();
+    const startPosition = mouseDownEvent.clientY;
+    const startHeight = responseAreaHeight;
+
+    function onMouseMove(mouseMoveEvent) {
+      const containerHeight = contentRef.current.offsetHeight;
+      const deltaY = startPosition - mouseMoveEvent.clientY;
+      const newHeight = Math.min(
+        Math.max(100, startHeight + deltaY),
+        containerHeight - 200
+      );
+      setResponseAreaHeight(newHeight);
+    }
+
+    function onMouseUp() {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    }
+
+    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseup", onMouseUp);
+  };
+
   return (
-    <div style={styles.mainContainer}>
-      <div style={styles.contentArea}>
-        <h1>Main Component {workspace_id}</h1>
+    <div style={styles.mainContainer} ref={contentRef}>
+      <div style={{...styles.contentArea, height: `calc(100vh - ${responseAreaHeight}px - 8px)`}}>
         <EndPointData
           method={method}
           url={url}
@@ -191,6 +238,8 @@ function Main() {
           setMethod={setMethod}
         />
       </div>
+
+      <Resizer onResize={handleResize} />
 
       <div style={styles.responseArea}>
         <ResponseAnalysisDisplay

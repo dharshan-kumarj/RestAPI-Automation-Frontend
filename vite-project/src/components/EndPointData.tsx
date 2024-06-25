@@ -109,7 +109,7 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
   };
 
   return (
-    <div className="container-fluid bg-dark text-light py-3">
+    <div className="container-fluid bg-dark text-light py-5">
       <div className="row justify-content-center">
         <div className="col-12 col-md-10 col-lg-8">
           <h1 className="mb-4">
