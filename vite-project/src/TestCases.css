@@ -42,3 +42,29 @@
   h4 {
     margin-top: 0;
   }
+
+  /* TestCases.css */
+.test-cases-container {
+  display: flex;
+  gap: 20px;
+}
+
+.test-cases-list {
+  flex: 1;
+}
+
+.test-case-details {
+  flex: 1;
+  min-width: 300px;
+}
+
+.test-case-button {
+  display: block;
+  width: 100%;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.test-case-button.selected {
+  background-color: #e0e0e0;
+}

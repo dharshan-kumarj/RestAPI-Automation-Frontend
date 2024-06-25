@@ -4,9 +4,10 @@ import "../TestCases.css";
 
 const TestCases = () => {
   const [selectedTestCase, setSelectedTestCase] = useState(null);
+  const [testCaseData, setTestCaseData] = useState([]);
 
   const predefinedTestCases = [
-    { case: "Validation of Response Schema", important: true, data: "Extracts and compares the structure of the actual response against the expected schema." },
+    { case: "Check Status 200", important: true, data: "checks whether the response comes with the status code of 200" },
     { case: "Validation of Response Body", important: true, data: "Compares the actual response body with the expected body content." },
     { case: "Check for Valid JSON", important: true, data: "Validates if the response is in JSON format." },
     { case: "Check for Specific Header Elements", important: false, data: "Validates the presence of specific headers in the response." },
@@ -20,6 +21,22 @@ const TestCases = () => {
 
   const handleTestCaseSelect = (testCase) => {
     setSelectedTestCase(testCase);
+    const newCase = {
+      case: testCase.case.toLowerCase().replace(/ /g, '_'),
+      data: null,
+      important: true
+    };
+    setTestCaseData(prevData => [...prevData, newCase]);
+  };
+
+  const handleDataChange = (e) => {
+    try {
+      const updatedData = JSON.parse(e.target.value);
+      setTestCaseData(updatedData);
+    } catch (error) {
+      // If JSON is invalid, don't update the state
+      console.error("Invalid JSON input");
+    }
   };
 
   return (
@@ -38,15 +55,16 @@ const TestCases = () => {
       </div>
       <div className="test-case-details">
         <h3>Test Case Details</h3>
-        {selectedTestCase ? (
-          <div>
-            <h4>{selectedTestCase.case}</h4>
-            <p><strong>Description:</strong> {selectedTestCase.data}</p>
-            <p><strong>Important:</strong> {selectedTestCase.important ? 'Yes' : 'No'}</p>
-          </div>
-        ) : (
-          <p>Select a test case to view details</p>
-        )}
+        <textarea
+          value={JSON.stringify(testCaseData, null, 2)}
+          onChange={handleDataChange}
+          style={{
+            width: '100%',
+            height: '500px',
+            resize: 'none',
+            fontFamily: 'monospace',
+          }}
+        />
       </div>
     </div>
   );
