@@ -7,6 +7,7 @@ import EndPointData from "../components/EndPointData";
 import WorkSpaceDisplay from "../components/WorkSpaceDisplay";
 import JsonInput from "../components/JsonInput";
 import KeyValueInput from "../components/KeyValueInput";
+import ResponseDisplay from "../components/ResponseDisplay";
 
 function Main() {
   const [token, setToken] = useState("");
@@ -19,6 +20,7 @@ function Main() {
   const [url, setUrl] = useState("");
   const [showScripts, setShowScripts] = useState(false);
   const [selectedTestCase, setSelectedTestCase] = useState(null);
+  const [responseData, setResponseData] = useState(null);
 
   console.log("testcases", testCases);
   console.log("headers", headers);
@@ -43,7 +45,7 @@ function Main() {
     return <SelectWorkSpace token={token} />;
   }
 
-  const handleSaveToWorkspace = async (path: any) => {
+  const handleSaveToWorkspace = async (path) => {
     const saveData = {
       workspace_id: workspace_id,
       request: {
@@ -78,80 +80,93 @@ function Main() {
   };
 
   const handleScriptsClick = () => {
-    setShowScripts(true);
+    setShowScripts(!showScripts);
   };
 
-  const handleTestCaseSelect = (testCase: React.SetStateAction<null>) => {
+  const handleTestCaseSelect = (testCase) => {
     setSelectedTestCase(testCase);
   };
 
+  const handleResponse = (data) => {
+    setResponseData(data);
+  };
+
   return (
-    <div style={{ marginLeft: 300, marginRight: 300 }}>
-      <h1>Main Component {workspace_id}</h1>
-      <EndPointData
-        method={method}
-        url={url}
-        setMethod={setMethod}
-        setUrl={setUrl}
-        token={token}
-        headers={headers}
-        body={body}
-        testCases={testCases}
-        workspace_id={workspace_id}
-        onScriptsClick={handleScriptsClick}
-      />
-      <JsonInput initJson={body} onJsonParsed={setBody} />
-      <KeyValueInput headers={headers} onObjectParsed={setHeaders} />
-      
-      {showScripts && <TestCases testCases={testCases} setTestCases={setTestCases} onTestCaseSelect={undefined} />}
-      
-            {/* Selected Test Case Display */}
-            {selectedTestCase && (
-        <div 
-          style={{
-            position: 'fixed',
-            left: '20px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            width: '250px',
-            padding: '15px',
-            backgroundColor: 'black',
-            color: 'white',
-            border: '1px solid #444',
-            borderRadius: '5px',
-          }}
-        >
-          <h6>Selected Test Case:</h6>
-          <p><strong>Case:</strong> {selectedTestCase.case}</p>
-          {selectedTestCase.data && (
-            <p><strong>Data:</strong> {JSON.stringify(selectedTestCase.data)}</p>
-          )}
-          {selectedTestCase.imp !== undefined && (
-            <p><strong>Important:</strong> {selectedTestCase.imp ? "Yes" : "No"}</p>
-          )}
-          {selectedTestCase.chack_previous_case !== undefined && (
-            <p><strong>Check Previous Case:</strong> {selectedTestCase.chack_previous_case ? "Yes" : "No"}</p>
-          )}
-        </div>
-      )}
-
-      {showScripts && (
-        <TestCases 
-          testCases={testCases} 
-          setTestCases={setTestCases} 
-          onTestCaseSelect={handleTestCaseSelect}
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', marginLeft: 300, marginRight: 300 }}>
+      <div style={{ flex: 1, overflowY: 'auto' }}>
+        <h1>Main Component {workspace_id}</h1>
+        <EndPointData
+          method={method}
+          url={url}
+          setMethod={setMethod}
+          setUrl={setUrl}
+          token={token}
+          headers={headers}
+          body={body}
+          testCases={testCases}
+          workspace_id={workspace_id}
+          onScriptsClick={handleScriptsClick}
+          onResponse={handleResponse}
         />
-      )}
 
-      {/* <WorkSpaceDisplay
-        token={token}
-        workspace_id={workspace_id}
-        setHeaders={setHeaders}
-        setBody={setBody}
-        setTestCases={setTestCases}
-        setUrl={setUrl}
-        setMethod={setMethod}
-      /> */}
+        {showScripts ? (
+          <div style={{ marginTop: 20 }}>
+            <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
+              <div style={{ 
+                width: '300px', 
+                backgroundColor: '#f0f0f0', 
+                borderRight: '1px solid #ccc',
+                padding: '20px'
+              }}>
+                <h2>Test Case Details</h2>
+                {selectedTestCase && (
+                  <div>
+                    <p><strong>Case:</strong> {selectedTestCase.case}</p>
+                    {selectedTestCase.data && (
+                      <p><strong>Data:</strong> {JSON.stringify(selectedTestCase.data)}</p>
+                    )}
+                    {selectedTestCase.imp !== undefined && (
+                      <p><strong>Important:</strong> {selectedTestCase.imp ? "Yes" : "No"}</p>
+                    )}
+                    {selectedTestCase.chack_previous_case !== undefined && (
+                      <p><strong>Check Previous Case:</strong> {selectedTestCase.chack_previous_case ? "Yes" : "No"}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+              
+              <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
+                <h2>Test Cases</h2>
+                <TestCases 
+                  testCases={testCases} 
+                  setTestCases={setTestCases} 
+                  onTestCaseSelect={handleTestCaseSelect}
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            <JsonInput initJson={body} onJsonParsed={setBody} />
+            <KeyValueInput headers={headers} onObjectParsed={setHeaders} />
+          </>
+        )}
+
+        <WorkSpaceDisplay
+          token={token}
+          workspace_id={workspace_id}
+          setHeaders={setHeaders}
+          setBody={setBody}
+          setTestCases={setTestCases}
+          setUrl={setUrl}
+          setMethod={setMethod}
+        />
+      </div>
+
+      <div style={{ height: '300px', borderTop: '1px solid #ccc', overflowY: 'auto' }}>
+        <h2>Response</h2>
+        <ResponseDisplay data={responseData} />
+      </div>
     </div>
   );
 }

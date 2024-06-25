@@ -1,9 +1,10 @@
 import React from 'react';
 
 function ResponseDisplay({ data }) {
+  if (!data) return <p>Enter the URL and click Send to get a Response.</p>;
+
   return (
-    <div className="mt-4">
-      <h2>Response Data</h2>
+    <div>
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );

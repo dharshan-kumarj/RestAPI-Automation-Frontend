@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ResponseDisplay from './ResponseDisplay';
 import Zelerius from '../assets/zelerius.svg';
 
-function EndPointData({ method, url, setUrl, setMethod, token, headers, body, testCases, workspace_id, onScriptsClick }) {
+function EndPointData({ method, url, setUrl, setMethod, token, headers, body, testCases, workspace_id, onScriptsClick, onResponse }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [responseData, setResponseData] = useState(null);
   const [path, setPath] = useState('');
 
   const handleSaveToWorkspace = async () => {
@@ -82,9 +80,10 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
       }
 
       const data = await response.json();
-      setResponseData(data);
+      onResponse(data);
     } catch (error) {
       setError(error instanceof Error ? error : new Error('An error occurred'));
+      onResponse(null);
     } finally {
       setIsLoading(false);
     }
@@ -191,7 +190,6 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
           </div>
 
           {error && <div className="alert alert-danger mt-3">Error: {error.message}</div>}
-          {responseData && <ResponseDisplay data={responseData} />}
         </div>
       </div>
     </div>
