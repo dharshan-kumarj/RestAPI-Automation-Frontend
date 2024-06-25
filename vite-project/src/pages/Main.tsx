@@ -7,26 +7,50 @@ import EndPointData from "../components/EndPointData";
 import WorkSpaceDisplay from "../components/WorkSpaceDisplay";
 import JsonInput from "../components/JsonInput";
 import KeyValueInput from "../components/KeyValueInput";
-import ResponseDisplay from "../components/ResponseDisplay";
+import ResponseAnalysisDisplay from "../components/ResponseDisplay";
+
+interface TestCase {
+  case: string;
+  data?: any;
+  imp?: boolean;
+  check_previous_case?: boolean;
+}
+
+const styles = {
+  mainContainer: {
+    display: 'flex',
+    flexDirection: 'column' as 'column',
+    height: '100vh',
+    marginLeft: 300,
+    marginRight: 300,
+  },
+  contentArea: {
+    flex: 1,
+    overflowY: 'auto' as 'auto',
+  },
+  responseArea: {
+    height: '400px',
+    borderTop: '1px solid #ccc',
+    backgroundColor: '#1e1e1e',
+    color: 'white',
+    overflowY: 'auto' as 'auto',
+  },
+};
 
 function Main() {
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState<string>("");
   const [searchParams] = useSearchParams();
   const workspace_id = searchParams.get("workspace");
-  const [testCases, setTestCases] = useState([]);
-  const [headers, setHeaders] = useState({});
-  const [body, setBody] = useState({});
-  const [method, setMethod] = useState("POST");
-  const [url, setUrl] = useState("");
-  const [showScripts, setShowScripts] = useState(false);
-  const [selectedTestCase, setSelectedTestCase] = useState(null);
-  const [responseData, setResponseData] = useState(null);
-
-  console.log("testcases", testCases);
-  console.log("headers", headers);
-  console.log("body", body);
-  console.log("method", method);
-  console.log("url", url);
+  const [testCases, setTestCases] = useState<TestCase[]>([]);
+  const [headers, setHeaders] = useState<Record<string, string>>({});
+  const [body, setBody] = useState<Record<string, any>>({});
+  const [method, setMethod] = useState<string>("POST");
+  const [url, setUrl] = useState<string>("");
+  const [showScripts, setShowScripts] = useState<boolean>(false);
+  const [selectedTestCase, setSelectedTestCase] = useState<TestCase | null>(null);
+  const [responseData, setResponseData] = useState<any>(null);
+  const [aiAnalysis, setAiAnalysis] = useState<string>("");
+  const [testCaseResults, setTestCaseResults] = useState<any>(null);
 
   const checkToken = async () => {
     const token = Cookies.get("token");
@@ -45,7 +69,7 @@ function Main() {
     return <SelectWorkSpace token={token} />;
   }
 
-  const handleSaveToWorkspace = async (path) => {
+  const handleSaveToWorkspace = async (path: string) => {
     const saveData = {
       workspace_id: workspace_id,
       request: {
@@ -83,17 +107,22 @@ function Main() {
     setShowScripts(!showScripts);
   };
 
-  const handleTestCaseSelect = (testCase) => {
+  const handleTestCaseSelect = (testCase: TestCase) => {
     setSelectedTestCase(testCase);
   };
 
-  const handleResponse = (data) => {
-    setResponseData(data);
+  const handleResponse = (data: any) => {
+    setResponseData(data.response);
+    // Ensure aiAnalysis is set as a string
+    setAiAnalysis(typeof data.ai_analysis === 'object' 
+      ? JSON.stringify(data.ai_analysis, null, 2) 
+      : data.ai_analysis);
+    setTestCaseResults(data.test_result);
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', marginLeft: 300, marginRight: 300 }}>
-      <div style={{ flex: 1, overflowY: 'auto' }}>
+    <div style={styles.mainContainer}>
+      <div style={styles.contentArea}>
         <h1>Main Component {workspace_id}</h1>
         <EndPointData
           method={method}
@@ -128,8 +157,8 @@ function Main() {
                     {selectedTestCase.imp !== undefined && (
                       <p><strong>Important:</strong> {selectedTestCase.imp ? "Yes" : "No"}</p>
                     )}
-                    {selectedTestCase.chack_previous_case !== undefined && (
-                      <p><strong>Check Previous Case:</strong> {selectedTestCase.chack_previous_case ? "Yes" : "No"}</p>
+                    {selectedTestCase.check_previous_case !== undefined && (
+                      <p><strong>Check Previous Case:</strong> {selectedTestCase.check_previous_case ? "Yes" : "No"}</p>
                     )}
                   </div>
                 )}
@@ -163,9 +192,12 @@ function Main() {
         />
       </div>
 
-      <div style={{ height: '300px', borderTop: '1px solid #ccc', overflowY: 'auto' }}>
-        <h2>Response</h2>
-        <ResponseDisplay data={responseData} />
+      <div style={styles.responseArea}>
+        <ResponseAnalysisDisplay
+          responseData={responseData}
+          aiAnalysis={aiAnalysis}
+          testCaseResults={testCaseResults}
+        />
       </div>
     </div>
   );
