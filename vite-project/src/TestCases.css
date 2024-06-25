@@ -1,0 +1,44 @@
+/* TestCases.css */
+.test-cases-container {
+    display: flex;
+    border: 1px solid #ccc;
+    min-height: 500px;
+  }
+  
+  .test-cases-list {
+    flex: 1;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+    max-height: 500px;
+  }
+  
+  .test-case-details {
+    flex: 1;
+    padding: 20px;
+    background-color: #f0f0f0;
+  }
+  
+  .test-case-button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    cursor: pointer;
+  }
+  
+  .test-case-button.selected {
+    background-color: #e0e0e0;
+  }
+  
+  h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+  
+  h4 {
+    margin-top: 0;
+  }

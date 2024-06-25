@@ -188,29 +188,6 @@ function Main() {
         {showScripts ? (
           <div style={{ marginTop: 20 }}>
             <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
-              <div style={{ 
-                width: '300px', 
-                backgroundColor: '#f0f0f0', 
-                borderRight: '1px solid #ccc',
-                padding: '20px'
-              }}>
-                <h2>Test Case Details</h2>
-                {selectedTestCase && (
-                  <div>
-                    <p><strong>Case:</strong> {selectedTestCase.case}</p>
-                    {selectedTestCase.data && (
-                      <p><strong>Data:</strong> {JSON.stringify(selectedTestCase.data)}</p>
-                    )}
-                    {selectedTestCase.imp !== undefined && (
-                      <p><strong>Important:</strong> {selectedTestCase.imp ? "Yes" : "No"}</p>
-                    )}
-                    {selectedTestCase.check_previous_case !== undefined && (
-                      <p><strong>Check Previous Case:</strong> {selectedTestCase.check_previous_case ? "Yes" : "No"}</p>
-                    )}
-                  </div>
-                )}
-              </div>
-              
               <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
                 <h2>Test Cases</h2>
                 <TestCases 
