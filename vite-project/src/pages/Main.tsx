@@ -189,7 +189,7 @@ function Main() {
           <div style={{ marginTop: 20 }}>
             <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
               <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
-                <h2>Test Cases</h2>
+                {/* <h2>Test Cases</h2> */}
                 <TestCases 
                   testCases={testCases} 
                   setTestCases={setTestCases} 

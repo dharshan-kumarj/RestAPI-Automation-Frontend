@@ -186,7 +186,7 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
             <button className="btn btn-link text-light" onClick={() => handleSectionClick('Authorization')}>Authorization</button>
             <button className="btn btn-link text-light" onClick={() => handleSectionClick('Headers')}>Headers</button>
             <button className="btn btn-link text-light" onClick={() => handleSectionClick('Body')}>Body</button>
-            <button className="btn btn-link text-light" onClick={() => handleSectionClick('Scripts')}>Scripts</button>
+            <button className="btn btn-link text-light" onClick={() => handleSectionClick('Scripts')}>Test Cases</button>
           </div>
 
           {error && <div className="alert alert-danger mt-3">Error: {error.message}</div>}
