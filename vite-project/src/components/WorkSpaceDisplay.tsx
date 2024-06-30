@@ -11,6 +11,8 @@ const WorkSpaceDisplay = ({
   setMethod,
 }) => {
   const [requests, setRequests] = useState([]);
+  const [folderStructure, setFolderStructure] = useState({});
+  const [openFolders, setOpenFolders] = useState({});
 
   useEffect(() => {
     const fetchWorkspaceData = async () => {
@@ -26,6 +28,22 @@ const WorkSpaceDisplay = ({
         );
         if (response.data.valid && response.data.requests) {
           setRequests(response.data.requests);
+          const folderStructure = {};
+          response.data.requests.forEach((request) => {
+            const pathParts = request.path.split("/");
+            let currentFolder = folderStructure;
+            pathParts.forEach((part, index) => {
+              if (index === pathParts.length - 1) {
+                currentFolder[part] = { type: "file", _id: request._id };
+              } else {
+                if (!currentFolder[part]) {
+                  currentFolder[part] = { type: "folder", children: {} };
+                }
+                currentFolder = currentFolder[part].children;
+              }
+            });
+          });
+          setFolderStructure(folderStructure);
         }
       } catch (error) {
         console.error("Error fetching workspace data:", error);
@@ -49,8 +67,6 @@ const WorkSpaceDisplay = ({
       );
       if (response.data.valid && response.data.request_data) {
         const { request_data } = response.data;
-        console.log(request_data)
-        // Set headers, body, test cases, url, and method here
         setHeaders({ ...request_data.request.headers });
         setBody({ ...request_data.request.body });
         setTestCases([...request_data.request.test_cases]);
@@ -62,32 +78,49 @@ const WorkSpaceDisplay = ({
     }
   };
 
+  const handleFolderClick = (folderPath) => {
+    setOpenFolders((prevOpenFolders) => ({
+      ...prevOpenFolders,
+      [folderPath]: !prevOpenFolders[folderPath],
+    }));
+  };
+
+  const renderFolderStructure = (folder, parentFolder = "") => {
+    return (
+      <ul className="list-group">
+        {Object.keys(folder).map((key) => {
+          const fullPath = parentFolder ? `${parentFolder}/${key}` : key;
+          const folderPath = fullPath.replace(/^\//, ''); // Remove leading slash if present
+          if (folder[key].type === "folder") {
+            return (
+              <li key={key} className="list-group-item">
+                <span
+                  onClick={() => handleFolderClick(folderPath)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {openFolders[folderPath] ? "-" : "+"} {key}
+                </span>
+                {openFolders[folderPath] && renderFolderStructure(folder[key].children, folderPath)}
+              </li>
+            );
+          } else if (folder[key].type === "file") {
+            return (
+              <li key={key} className="list-group-item" onClick={() => handleClick(folder[key]._id)}>
+                <span>{key}</span>
+              </li>
+            );
+          }
+          return null; // Handle unexpected types gracefully
+        })}
+      </ul>
+    );
+  };
+
   return (
-    <div
-      className="card"
-      style={{
-        position: "fixed",
-        top: "20px",
-        left: "10px",
-        width: "300px",
-        height: "400px",
-        overflowY: "auto",
-      }}
-    >
+    <div className="card" style={{ width: "300px", position: "fixed", top: "20px", left: "10px" }}>
       <div className="card-body">
         <h5 className="card-title">Workspace Paths</h5>
-        <ul className="list-group mb-3">
-          {requests.map((request, index) => (
-            <li
-              key={index}
-              className="list-group-item"
-              onClick={() => handleClick(request._id)}
-              style={{ cursor: "pointer" }}
-            >
-              {request.path}
-            </li>
-          ))}
-        </ul>
+        {renderFolderStructure(folderStructure)}
       </div>
     </div>
   );
