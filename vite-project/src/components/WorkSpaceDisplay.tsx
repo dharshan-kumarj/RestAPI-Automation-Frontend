@@ -18,7 +18,7 @@ const WorkSpaceDisplay = ({
     const fetchWorkspaceData = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:8000/get-workspace",
+          "https://api-testing-zelerius.portos.site/get-workspace",
           { workspace_id },
           {
             headers: {
@@ -58,7 +58,7 @@ const WorkSpaceDisplay = ({
   const handleClick = async (_id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/get-workspace-details/${workspace_id}/${_id}`,
+        `https://api-testing-zelerius.portos.site/get-workspace-details/${workspace_id}/${_id}`,
         {
           headers: {
             Token: token,
@@ -117,7 +117,9 @@ const WorkSpaceDisplay = ({
   };
 
   return (
-    <div className="card" style={{ width: "300px", position: "fixed", top: "20px", left: "10px" }}>
+    <div className="card" 
+    // style={{ width: "300px", position: "fixed", top: "20px", left: "10px" }}
+    >
       <div className="card-body">
         <h5 className="card-title">Workspace Paths</h5>
         {renderFolderStructure(folderStructure)}

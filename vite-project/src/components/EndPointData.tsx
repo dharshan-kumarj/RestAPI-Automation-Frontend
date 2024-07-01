@@ -29,7 +29,7 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
     };
     console.log(saveData);
     try {
-      const response = await fetch('http://localhost:8000/save-to-workspace', {
+      const response = await fetch('https://api-testing-zelerius.portos.site/save-to-workspace', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
     };
 
     try {
-      const response = await fetch("http://localhost:8000/fetch-one", {
+      const response = await fetch("https://api-testing-zelerius.portos.site/fetch-one", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',

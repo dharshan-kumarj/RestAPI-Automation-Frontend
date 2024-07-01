@@ -20,7 +20,7 @@ function Login() {
     const data = { email, password };
 
     try {
-      const response = await fetch('http://localhost:8000/login', {
+      const response = await fetch('https://api-testing-zelerius.portos.site/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ function Login() {
         // Save the token in the cookies
         Cookies.set('token', responseData.token);
         // Redirect to the dashboard
-        window.location.href = 'http://localhost:5173/';
+        window.location.href = 'https://zelerius-api.portos.site/';
       } else {
         setErrorMessage(responseData.message || 'An error occurred during login');
       }
@@ -64,7 +64,7 @@ function Login() {
               <button className="btn btn-outline-light me-3" style={{ backgroundColor: "#7474F1",border: '1px solid #7474F1' }}>
                 Back to Home
               </button>
-              <button className="btn btn-outline-light" style={{ color: "#FD6262", border: '1px solid #FD6262' }} onClick={() => window.location.href = "http://localhost:5173/register"}>
+              <button className="btn btn-outline-light" style={{ color: "#FD6262", border: '1px solid #FD6262' }} onClick={() => window.location.href = "https://zelerius-api.portos.site/register"}>
                 Register
               </button>
             </div>
@@ -109,9 +109,9 @@ function Login() {
                       Login
                     </button>
                   </div>
-                  <h3 className='fs-6 pt-4 d-flex justify-content-center' style={{ color: "#D9D9D9" }}>I forgot my password.<span style={{ color: "#FD6262", marginLeft: "10px" }} onClick={() => window.location.href = "http://localhost:5173/forgotpass"}> Click here.</span></h3>
+                  <h3 className='fs-6 pt-4 d-flex justify-content-center' style={{ color: "#D9D9D9" }}>I forgot my password.<span style={{ color: "#FD6262", marginLeft: "10px" }} onClick={() => window.location.href = "https://zelerius-api.portos.site/forgotpass"}> Click here.</span></h3>
                   <div className="d-grid pt-3 mb-5 gap-2 col-12 mx-auto">
-                    <button className="btn btn-outline-light form-control" type="button" style={{border: '1px solid #FD6262'}} onClick={() => window.location.href = "http://localhost:5173/register"}>Register New Account</button>
+                    <button className="btn btn-outline-light form-control" type="button" style={{border: '1px solid #FD6262'}} onClick={() => window.location.href = "https://zelerius-api.portos.site/register"}>Register New Account</button>
                   </div>
                 </form>
               </div>
