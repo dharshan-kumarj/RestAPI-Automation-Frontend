@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Zelerius from '../assets/zelerius.svg';
 
-function EndPointData({ method, url, setUrl, setMethod, token, headers, body, testCases, workspace_id, onScriptsClick, onResponse }) {
+function EndPointData({ method, url, setUrl, setMethod, token, headers, body, testCases, workspace_id, params, setCurrentSection, onResponse }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [path, setPath] = useState('');
+  const [queryParams, setQueryParams] = useState('');
+
+  useEffect(() => {
+    // Update query parameters in the URL when params change
+    const paramsString = Object.entries(params)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+    const updatedUrl = url.split('?')[0] + '?' + paramsString;
+    setUrl(updatedUrl);
+    setQueryParams(paramsString);
+  }, [params, setUrl]);
 
   const handleSaveToWorkspace = async () => {
     if (!path) {
@@ -27,7 +38,7 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
       },
       path: `/${path}`
     };
-    console.log(saveData);
+
     try {
       const response = await fetch('https://api-testing-zelerius.portos.site/save-to-workspace', {
         method: 'POST',
@@ -101,11 +112,7 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
   };
 
   const handleSectionClick = (section) => {
-    if (section === 'Scripts') {
-      onScriptsClick();
-    } else {
-      alert(`You clicked on ${section}`);
-    }
+    setCurrentSection(section);
   };
 
   return (
@@ -132,32 +139,32 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
                   <option value="PUT">PUT</option>
                 </select>
               </div>
-              <input 
-                type="text" 
-                className="form-control bg-dark text-light border-white" 
-                id="url" 
-                name="url" 
-                value={url} 
+              <input
+                type="text"
+                className="form-control bg-dark text-light border-white"
+                id="url"
+                name="url"
+                value={url}
                 onChange={handleChange}
                 style={{ borderColor: 'white' }}
               />
             </div>
             <div className="mb-3 position-relative">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 className="form-control bg-dark text-white"
-                id="path" 
-                name="path" 
-                value={path} 
+                id="path"
+                name="path"
+                value={path}
                 onChange={handleChange}
                 placeholder="Enter name to save"
                 style={{ paddingLeft: '80px' }}
               />
-              <span 
+              <span
                 className="position-absolute bg-white text-dark"
-                style={{ 
-                  left: '5px', 
-                  top: '30%', 
+                style={{
+                  left: '5px',
+                  top: '30%',
                   transform: 'translateY(-50%)',
                   padding: '2px 8px',
                   borderRadius: '6px',
@@ -180,13 +187,12 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
               </button>
             </div>
           </form>
-          
+
           <div className="mt-3">
             <button className="btn btn-link text-light" onClick={() => handleSectionClick('Params')}>Params</button>
-            <button className="btn btn-link text-light" onClick={() => handleSectionClick('Authorization')}>Authorization</button>
             <button className="btn btn-link text-light" onClick={() => handleSectionClick('Headers')}>Headers</button>
             <button className="btn btn-link text-light" onClick={() => handleSectionClick('Body')}>Body</button>
-            <button className="btn btn-link text-light" onClick={() => handleSectionClick('Scripts')}>Test Cases</button>
+            <button className="btn btn-link text-light" onClick={() => handleSectionClick('TestCases')}>Test Cases</button>
           </div>
 
           {error && <div className="alert alert-danger mt-3">Error: {error.message}</div>}

@@ -68,6 +68,7 @@ function Main() {
   const workspace_id = searchParams.get("workspace");
   const [testCases, setTestCases] = useState<TestCase[]>([]);
   const [headers, setHeaders] = useState<Record<string, string>>({});
+  const [params, setParams] = useState<Record<string, string>>({});
   const [body, setBody] = useState<Record<string, any>>({});
   const [method, setMethod] = useState<string>("POST");
   const [url, setUrl] = useState<string>("");
@@ -79,6 +80,7 @@ function Main() {
   const [responseAreaHeight, setResponseAreaHeight] = useState(400);
   const [workspaceWidth, setWorkspaceWidth] = useState(300);
   const contentRef = useRef(null);
+  const [currentSection, setCurrentSection] = useState<string>("");
 
   const styles = {
     mainContainer: {
@@ -219,7 +221,8 @@ function Main() {
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
   };
-
+  
+  console.log("Key Value params",params)
   return (
     <>
       <div className="row" style={{overflowX:"hidden"}}>
@@ -250,11 +253,12 @@ function Main() {
                 body={body}
                 testCases={testCases}
                 workspace_id={workspace_id}
-                onScriptsClick={handleScriptsClick}
+                params={params}
                 onResponse={handleResponse}
+                setCurrentSection={setCurrentSection}
               />
 
-              {showScripts ? (
+              {currentSection === 'TestCases' ? (
                 <div style={{ marginTop: '20px' }}>
                   <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
                     <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
@@ -266,12 +270,41 @@ function Main() {
                     </div>
                   </div>
                 </div>
-              ) : (
-                <>
-                  <JsonInput initJson={body} onJsonParsed={setBody} />
-                  <KeyValueInput headers={headers} onObjectParsed={setHeaders} />
-                </>
-              )}
+              ) : currentSection === 'Body' ? (
+                <div style={{ marginTop: '20px' }}>
+                  <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
+                    <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
+                      <JsonInput
+                        data={body}
+                        onJsonParsed={setBody}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : currentSection === 'Headers' ? (
+                <div style={{ marginTop: '20px' }}>
+                  <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
+                    <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
+                      <KeyValueInput
+                        data={headers}
+                        onObjectParsed={setHeaders}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : currentSection === 'Params' ? (
+                <div style={{ marginTop: '20px' }}>
+                  <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
+                    <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
+                      <KeyValueInput
+                        data={params}
+                        onObjectParsed={setParams}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ):null}
+
             </div>
 
             <Resizer onResize={handleVerticalResize} />

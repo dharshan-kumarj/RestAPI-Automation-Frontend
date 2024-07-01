@@ -38,8 +38,10 @@ const KeyValueInput = ({ headers, onObjectParsed }) => {
 
   return (
     <div className="container mt-4">
+    
       {keyValuePairs.map((pair, index) => (
         <div className="form-row align-items-center mb-2" key={index}>
+         <div className="row">
           <div className="col">
             <input
               type="text"
@@ -58,9 +60,19 @@ const KeyValueInput = ({ headers, onObjectParsed }) => {
               onChange={(e) => handleInputChange(index, 'value', e.target.value)}
             />
           </div>
-          <div className="col-auto">
+          <div className="col">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="description"
+              value={pair.description}
+              onChange={(e) => handleInputChange(index, 'description', e.target.description)}
+            />
+          </div>
+           <div className="col-auto">
             <button className="btn btn-danger" onClick={() => handleRemovePair(index)}>Remove</button>
           </div>
+        </div>
         </div>
       ))}
       <button className="btn btn-secondary mt-2" onClick={handleAddPair}>Add Pair</button>
