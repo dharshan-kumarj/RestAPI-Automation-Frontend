@@ -115,7 +115,7 @@ function generateFlowJSON(nodes: Node[], edges: Edge[]) {
         body: {},
         headers: {}
       },
-      testcase: node.data?.testCases ? [node.data.testCases] : [],
+      testcase: node.data?.testCases ? JSON.parse(node.data.testCases) : [],
       true: {},
       false: {}
     };
@@ -230,10 +230,7 @@ function Flow() {
   return (
     <div style={{ width: '100%', height: '100vh' }}>
       <ReactFlow
-        nodes={nodes.map(node => ({
-          ...node,
-          data: { ...node.data, updateNodeData }
-        }))}
+        nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
@@ -241,25 +238,13 @@ function Flow() {
         onNodeClick={onNodeClick}
         nodeTypes={nodeTypes}
         fitView
-        style={{ width: '100%', height: '100%', backgroundColor: 'black' }}
       >
-        <MiniMap nodeStrokeWidth={3} />
-        <Background />
+        <MiniMap />
         <Controls />
+        <Background />
       </ReactFlow>
-      <button onClick={logFlowJSON} style={{
-        position: 'absolute',
-        bottom: '20px',
-        right: '20px',
-        zIndex: 4,
-        padding: '10px',
-        backgroundColor: '#4CAF50',
-        color: 'white',
-        border: 'none',
-        borderRadius: '5px',
-        cursor: 'pointer'
-      }}>
-        Log Flow JSON
+      <button onClick={logFlowJSON} style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
+        Generate JSON
       </button>
     </div>
   );

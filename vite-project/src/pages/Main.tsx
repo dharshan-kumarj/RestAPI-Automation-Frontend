@@ -242,7 +242,8 @@ function Main() {
 
         <div className="col">
           <div style={{}} ref={contentRef}>
-            <div style={{ ...styles.contentArea, height: `calc(100vh - ${responseAreaHeight}px - 8px)` }}>
+            <div 
+            style={{ ...styles.contentArea, height: `calc(100vh - ${responseAreaHeight}px - 8px)` }}>
               <EndPointData
                 method={method}
                 url={url}

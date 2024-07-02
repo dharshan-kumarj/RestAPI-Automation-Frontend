@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const WorkSpaceDisplay = ({
   token,
@@ -85,44 +86,60 @@ const WorkSpaceDisplay = ({
     }));
   };
 
-  const renderFolderStructure = (folder, parentFolder = "") => {
+  const renderFolderStructure = (folder, parentFolder = "", isRoot = true) => {
     return (
-      <ul className="list-group">
+      <ul className="list-unstyled mb-0">
         {Object.keys(folder).map((key) => {
           const fullPath = parentFolder ? `${parentFolder}/${key}` : key;
-          const folderPath = fullPath.replace(/^\//, ''); // Remove leading slash if present
+          const folderPath = fullPath.replace(/^\//, '');
           if (folder[key].type === "folder") {
             return (
-              <li key={key} className="list-group-item">
-                <span
+              <li key={key} className="mb-2">
+                <div
                   onClick={() => handleFolderClick(folderPath)}
+                  className="d-flex align-items-center"
                   style={{ cursor: "pointer" }}
                 >
-                  {openFolders[folderPath] ? "-" : "+"} {key}
-                </span>
-                {openFolders[folderPath] && renderFolderStructure(folder[key].children, folderPath)}
+                  <i className={`bi ${openFolders[folderPath] ? 'bi-folder2-open' : 'bi-folder2'} me-2 text-warning`}></i>
+                  <span className="text-light">{key}</span>
+                </div>
+                {openFolders[folderPath] && (
+                  <ul className="list-unstyled ps-3 mt-2">
+                    {renderFolderStructure(folder[key].children, folderPath, false)}
+                  </ul>
+                )}
               </li>
             );
           } else if (folder[key].type === "file") {
             return (
-              <li key={key} className="list-group-item" onClick={() => handleClick(folder[key]._id)}>
-                <span>{key}</span>
+              <li 
+                key={key} 
+                onClick={() => handleClick(folder[key]._id)}
+                style={{ cursor: "pointer" }}
+                className="mb-2"
+              >
+                <div className="d-flex align-items-center">
+                  <i className="bi bi-file-earmark me-2 text-info"></i>
+                  <span className="text-light">{key}</span>
+                </div>
               </li>
             );
           }
-          return null; // Handle unexpected types gracefully
+          return null;
         })}
       </ul>
     );
   };
 
   return (
-    <div className="card" 
-    // style={{ width: "300px", position: "fixed", top: "20px", left: "10px" }}
-    >
-      <div className="card-body">
-        <h5 className="card-title">Workspace Paths</h5>
-        {renderFolderStructure(folderStructure)}
+    <div className="card bg-dark text-white shadow-lg mb-4" style={{ borderRadius: 0 }}>
+      <div className="card-body p-0">
+        <div className="p-3 border-bottom border-secondary">
+          <h4 className="card-title mb-0">Workspace Paths</h4>
+        </div>
+        <div className="workspace-tree p-3" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+          {renderFolderStructure(folderStructure)}
+        </div>
       </div>
     </div>
   );

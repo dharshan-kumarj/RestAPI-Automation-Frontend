@@ -111,7 +111,7 @@ const AIAnalysisDisplay = ({ aiAnalysis }) => {
         lineHeight: '1.5',
         overflowX: 'auto',
       }}>
-        {aiAnalysis}
+        {typeof aiAnalysis === 'object' ? JSON.stringify(aiAnalysis, null, 2) : aiAnalysis}
       </pre>
     </div>
   );
@@ -122,7 +122,7 @@ const TestCasesDisplay = ({ testCaseResults }) => {
     <div style={styles.container}>
       <h2 style={styles.title}>Test Case Results</h2>
       <pre style={styles.pre}>
-        {JSON.stringify(testCaseResults, null, 2)}
+        {typeof testCaseResults === 'object' ? JSON.stringify(testCaseResults, null, 2) : testCaseResults}
       </pre>
     </div>
   );
