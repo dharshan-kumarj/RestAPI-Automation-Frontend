@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Zelerius from '../assets/zelerius.svg';
 
 function EndPointData({ method, url, setUrl, setMethod, token, headers, body, testCases, workspace_id, params, setCurrentSection, onResponse }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -119,10 +118,7 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
     <div className="container-fluid bg-dark text-light py-5">
       <div className="row justify-content-center">
         <div className="col-12 col-md-10 col-lg-8">
-          <h1 className="mb-4">
-            <img src={Zelerius} className='me-2' alt="Logo" />
-            Zelerius API
-          </h1>
+          
           <form onSubmit={handleSubmit} className="mb-3">
             <div className="d-flex align-items-center mb-3">
               <div className="me-2">

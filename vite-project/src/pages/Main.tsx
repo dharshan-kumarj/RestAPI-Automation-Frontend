@@ -8,6 +8,7 @@ import WorkSpaceDisplay from "../components/WorkSpaceDisplay";
 import JsonInput from "../components/JsonInput";
 import KeyValueInput from "../components/KeyValueInput";
 import ResponseAnalysisDisplay from "../components/ResponseDisplay";
+import UserBar from "../components/UserBar";
 
 interface TestCase {
   case: string;
@@ -67,13 +68,11 @@ function Main() {
   const [searchParams] = useSearchParams();
   const workspace_id = searchParams.get("workspace");
   const [testCases, setTestCases] = useState<TestCase[]>([]);
-  const [headers, setHeaders] = useState<Record<string, string>>({});
+  const [headers, setHeaders] = useState<Record<string, string>>({"test":"test1"});
   const [params, setParams] = useState<Record<string, string>>({});
-  const [body, setBody] = useState<Record<string, any>>({});
+  const [body, setBody] = useState<Record<string, any>>();
   const [method, setMethod] = useState<string>("POST");
   const [url, setUrl] = useState<string>("");
-  const [showScripts, setShowScripts] = useState<boolean>(false);
-  const [selectedTestCase, setSelectedTestCase] = useState<TestCase | null>(null);
   const [responseData, setResponseData] = useState<any>(null);
   const [aiAnalysis, setAiAnalysis] = useState<string>("");
   const [testCaseResults, setTestCaseResults] = useState<any>(null);
@@ -124,47 +123,8 @@ function Main() {
     return <SelectWorkSpace token={token} />;
   }
 
-  const handleSaveToWorkspace = async (path: string) => {
-    const saveData = {
-      workspace_id: workspace_id,
-      request: {
-        method: method,
-        url: url,
-        headers: headers,
-        body: body,
-        test_cases: testCases,
-      },
-      path: path,
-    };
+  
 
-    try {
-      const response = await fetch("https://api-testing-zelerius.portos.site/save-to-workspace", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Token: token,
-        },
-        body: JSON.stringify(saveData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to save to workspace");
-      }
-
-      alert("Saved to workspace successfully!");
-    } catch (error) {
-      console.error("Error saving to workspace:", error);
-      alert("Failed to save to workspace");
-    }
-  };
-
-  const handleScriptsClick = () => {
-    setShowScripts(!showScripts);
-  };
-
-  const handleTestCaseSelect = (testCase: TestCase) => {
-    setSelectedTestCase(testCase);
-  };
 
   const handleResponse = (data: any) => {
     setResponseData(data.response);
@@ -222,9 +182,10 @@ function Main() {
     document.addEventListener("mouseup", onMouseUp);
   };
   
-  console.log("Key Value params",params)
+  console.log("Key Value headers",headers)
   return (
     <>
+      <UserBar/>
       <div className="row" style={{overflowX:"hidden"}}>
         <div className="col-3" style={styles.workspaceDisplay}>
           <WorkSpaceDisplay
@@ -266,7 +227,7 @@ function Main() {
                       <TestCases
                         testCases={testCases}
                         setTestCases={setTestCases}
-                        onTestCaseSelect={handleTestCaseSelect}
+                        // onTestCaseSelect={handleTestCaseSelect}
                       />
                     </div>
                   </div>
@@ -276,7 +237,7 @@ function Main() {
                   <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
                     <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
                       <JsonInput
-                        data={body}
+                        initJson={body}
                         onJsonParsed={setBody}
                       />
                     </div>
@@ -287,7 +248,7 @@ function Main() {
                   <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
                     <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
                       <KeyValueInput
-                        data={headers}
+                        initKeyValue={headers}
                         onObjectParsed={setHeaders}
                       />
                     </div>
@@ -298,7 +259,7 @@ function Main() {
                   <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
                     <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
                       <KeyValueInput
-                        data={params}
+                        initKeyValue={params}
                         onObjectParsed={setParams}
                       />
                     </div>

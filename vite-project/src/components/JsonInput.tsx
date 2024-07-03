@@ -28,6 +28,19 @@ const JsonInput = ({ initJson, onJsonParsed }) => {
     }
   };
 
+  // Use useEffect to call onJsonParsed whenever jsonInput changes
+  useEffect(() => {
+    try {
+      const parsed = JSON.parse(jsonInput);
+      setParsedJson(parsed);
+      setError('');
+      onJsonParsed(parsed); // Pass the parsed JSON back to the parent
+    } catch (e) {
+      setError('Invalid JSON');
+      setParsedJson(null);
+    }
+  }, [jsonInput, onJsonParsed]);
+
   return (
     <div className="container mt-4">
       <div className="form-group">

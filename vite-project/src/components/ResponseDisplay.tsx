@@ -54,8 +54,8 @@ const styles = {
 };
 
 const ResponseDisplay = ({ responseData }) => {
-  const [showRaw, setShowRaw] = useState(false);
-  
+  const [showRaw, setShowRaw] = useState(true);
+  // alert(responseData)
   let statusCode = '';
   let message = '';
 
@@ -77,13 +77,13 @@ const ResponseDisplay = ({ responseData }) => {
       </div>
       <button 
         style={styles.button}
-        onClick={() => setShowRaw(!showRaw)}
+        onClick={() => setShowRaw(!showRaw) }
       >
         {showRaw ? 'Hide' : 'Show'} Raw Response
       </button>
-      {showRaw && (
+      {showRaw  && ( 
         <pre style={styles.pre}>
-          {responseData}
+          {JSON.stringify(responseData)}
         </pre>
       )}
       <button 

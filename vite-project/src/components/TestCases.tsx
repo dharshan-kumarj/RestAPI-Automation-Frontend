@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../TestCases.css";
 
-const TestCases = () => {
-  const [selectedTestCase, setSelectedTestCase] = useState<any>(null);
-  const [testCaseData, setTestCaseData] = useState<any[]>([]);
+const TestCases = ({ testCase, setTestCases }) => {
+  const [selectedTestCase, setSelectedTestCase] = useState(null);
+  const [testCaseData, setTestCaseData] = useState([]);
 
   const predefinedTestCases = [
     { case: "Check Status 200", important: true, data: "checks whether the response comes with the status code of 200" },
     { case: "Validation of Response Body", important: false, data: "Compares the actual response body with the expected body content." },
-    { case: "Check for Valid JSON", important: true, data: "Validates if the response is in JSON format." },
+    { case: "Check Valid JSON", important: true, data: "Validates if the response is in JSON format." },
     { case: "Check for Specific Header Elements", important: false, data: "Validates the presence of specific headers in the response." },
     { case: "Check HTML and XML Responses", important: false, data: "Validates if the response is in HTML or XML format." },
     { case: "Check JSON Key-Value Pairs", important: false, data: "Validates specific key-value pairs within the JSON response." },
@@ -19,9 +19,9 @@ const TestCases = () => {
     { case: "Set global variable from response", important: false, data: "Extracts nested elements from JSON responses for validation." },
   ];
 
-  const handleTestCaseSelect = (testCase: any) => {
+  const handleTestCaseSelect = (testCase) => {
     setSelectedTestCase(testCase);
-    const newCase: any = {
+    const newCase = {
       case: testCase.case.toLowerCase().replace(/ /g, '_'),
       data: null,
       important: testCase.important
@@ -37,7 +37,7 @@ const TestCases = () => {
     setTestCaseData(prevData => [...prevData, newCase]);
   };
 
-  const handleDataChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleDataChange = (e) => {
     try {
       const updatedData = JSON.parse(e.target.value);
       setTestCaseData(updatedData);
@@ -45,6 +45,11 @@ const TestCases = () => {
       console.error("Invalid JSON input");
     }
   };
+
+  useEffect(() => {
+    // Update the parent component's state whenever testCaseData changes
+    setTestCases(testCaseData);
+  }, [testCaseData, setTestCases]);
 
   return (
     <div className="test-cases-container">
