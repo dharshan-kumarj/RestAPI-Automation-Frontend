@@ -26,14 +26,14 @@ const TestCases = ({ testCase, setTestCases }) => {
       data: null,
       important: testCase.important
     };
-    
+
     if (
-      testCase.case === "Set global variable" || 
+      testCase.case === "Set global variable" ||
       testCase.case === "Set global variable from response"
     ) {
       newCase.check_previous_case = false;
     }
-    
+
     setTestCaseData(prevData => [...prevData, newCase]);
   };
 
@@ -46,38 +46,48 @@ const TestCases = ({ testCase, setTestCases }) => {
     }
   };
 
-  useEffect(() => {
-    // Update the parent component's state whenever testCaseData changes
+  const handleParseButtonClick = () => {
     setTestCases(testCaseData);
-  }, [testCaseData, setTestCases]);
+  };
+
+  useEffect(() => {
+    if (testCase) {
+      setTestCaseData(testCase);
+    }
+  }, [testCase]);
 
   return (
-    <div className="test-cases-container">
-      <div className="test-cases-list">
-        <h3 className="text-white">Test Cases</h3>
-        {predefinedTestCases.map((testCase, index) => (
-          <button
-            key={index}
-            className={`test-case-button ${selectedTestCase === testCase ? 'selected' : ''}`}
-            onClick={() => handleTestCaseSelect(testCase)}
-          >
-            <span className="test-case-number">{index + 1}.</span>
-            <span className="test-case-title">{testCase.case}</span>
-            {(testCase.case === "Check Status 200" || testCase.case === "Check for Valid JSON") && 
-              <span className="important-badge">Important</span>
-            }
-          </button>
-        ))}
+    <>
+      <div className="text-end"> <button onClick={handleParseButtonClick} className="btn btn-primary">Parse</button></div>
+      <div className="test-cases-container">
+
+        <div className="test-cases-list">
+          <h3 className="text-white">Test Cases</h3>
+          {predefinedTestCases.map((testCase, index) => (
+            <button
+              key={index}
+              className={`test-case-button ${selectedTestCase === testCase ? 'selected' : ''}`}
+              onClick={() => handleTestCaseSelect(testCase)}
+            >
+              <span className="test-case-number">{index + 1}.</span>
+              <span className="test-case-title">{testCase.case}</span>
+              {(testCase.case === "Check Status 200" || testCase.case === "Check for Valid JSON") &&
+                <span className="important-badge">Important</span>
+              }
+            </button>
+          ))}
+        </div>
+        <div className="test-case-details">
+          <h3 className="text-white">Test Case Details</h3>
+          <textarea
+            value={JSON.stringify(testCaseData, null, 2)}
+            onChange={handleDataChange}
+            placeholder="JSON data will appear here..."
+          />
+
+        </div>
       </div>
-      <div className="test-case-details">
-        <h3 className="text-white">Test Case Details</h3>
-        <textarea
-          value={JSON.stringify(testCaseData, null, 2)}
-          onChange={handleDataChange}
-          placeholder="JSON data will appear here..."
-        />
-      </div>
-    </div>
+    </>
   );
 };
 

@@ -70,7 +70,7 @@ function Main() {
   const [testCases, setTestCases] = useState<TestCase[]>([]);
   const [headers, setHeaders] = useState<Record<string, string>>({});
   const [params, setParams] = useState<Record<string, string>>({});
-  const [body, setBody] = useState<Record<string, any>>();
+  const [body, setBody] = useState<Record<string, any>>({});
   const [method, setMethod] = useState<string>("POST");
   const [url, setUrl] = useState<string>("");
   const [responseData, setResponseData] = useState<any>(null);
@@ -123,7 +123,7 @@ function Main() {
     return <SelectWorkSpace token={token} />;
   }
 
-  
+
 
 
   const handleResponse = (data: any) => {
@@ -181,103 +181,105 @@ function Main() {
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
   };
-  
-  console.log("Key Value headers",headers)
+
+  console.log("Key Value headers", headers)
   return (
     <>
-      <UserBar/>
-      <div className="row" style={{overflowX:"hidden"}}>
-        <div className="col-3" style={styles.workspaceDisplay}>
-          <WorkSpaceDisplay
-            token={token}
-            workspace_id={workspace_id}
-            setHeaders={setHeaders}
-            setBody={setBody}
-            setTestCases={setTestCases}
-            setUrl={setUrl}
-            setMethod={setMethod}
-            handleResponse={handleResponse}
-          />
-        </div>
+      <div className="bg-dark">
+        <UserBar />
+        <div className="row" style={{ overflowX: "hidden" }}>
+          <div className="col-3" style={styles.workspaceDisplay}>
+            <WorkSpaceDisplay
+              token={token}
+              workspace_id={workspace_id}
+              setHeaders={setHeaders}
+              setBody={setBody}
+              setTestCases={setTestCases}
+              setUrl={setUrl}
+              setMethod={setMethod}
+              handleResponse={handleResponse}
+            />
+          </div>
 
-        <HorizontalResizer onResize={handleHorizontalResize} />
+          <HorizontalResizer onResize={handleHorizontalResize} />
 
-        <div className="col">
-          <div style={{}} ref={contentRef}>
-            <div 
-            style={{ ...styles.contentArea, height: `calc(100vh - ${responseAreaHeight}px - 8px)` }}>
-              <EndPointData
-                method={method}
-                url={url}
-                setMethod={setMethod}
-                setUrl={setUrl}
-                token={token}
-                headers={headers}
-                body={body}
-                testCases={testCases}
-                workspace_id={workspace_id}
-                params={params}
-                onResponse={handleResponse}
-                setCurrentSection={setCurrentSection}
-              />
+          <div className="col">
+            <div style={{}} ref={contentRef}>
+              <div
+                style={{ ...styles.contentArea, height: `calc(100vh - ${responseAreaHeight}px - 8px)` }}>
+                <EndPointData
+                  method={method}
+                  url={url}
+                  setMethod={setMethod}
+                  setUrl={setUrl}
+                  token={token}
+                  headers={headers}
+                  body={body}
+                  testCases={testCases}
+                  workspace_id={workspace_id}
+                  params={params}
+                  onResponse={handleResponse}
+                  setCurrentSection={setCurrentSection}
+                />
 
-              {currentSection === 'TestCases' ? (
-                <div style={{ marginTop: '20px' }}>
-                  <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
-                    <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
-                      <TestCases
-                        testCases={testCases}
-                        setTestCases={setTestCases}
+                {currentSection === 'TestCases' ? (
+                  <div style={{ marginTop: '20px' }}>
+                    <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
+                      <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
+                        <TestCases
+                          testCase={testCases}
+                          setTestCases={setTestCases}
                         // onTestCaseSelect={handleTestCaseSelect}
-                      />
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ) : currentSection === 'Body' ? (
-                <div style={{ marginTop: '20px' }}>
-                  <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
-                    <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
-                      <JsonInput
-                        initJson={body}
-                        onJsonParsed={setBody}
-                      />
+                ) : currentSection === 'Body' ? (
+                  <div style={{ marginTop: '20px' }}>
+                    <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
+                      <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
+                        <JsonInput
+                          initJson={body}
+                          onJsonParsed={setBody}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ) : currentSection === 'Headers' ? (
-                <div style={{ marginTop: '20px' }}>
-                  <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
-                    <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
-                      <KeyValueInput
-                        initKeyValue={headers}
-                        setResult={setHeaders}
-                      />
+                ) : currentSection === 'Headers' ? (
+                  <div style={{ marginTop: '20px' }}>
+                    <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
+                      <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
+                        <KeyValueInput
+                          initKeyValue={headers}
+                          setResult={setHeaders}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ) : currentSection === 'Params' ? (
-                <div style={{ marginTop: '20px' }}>
-                  <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
-                    <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
-                      <KeyValueInput
-                        initKeyValue={params}
-                        setResult={setParams}
-                      />
+                ) : currentSection === 'Params' ? (
+                  <div style={{ marginTop: '20px' }}>
+                    <div style={{ display: 'flex', minHeight: '400px', border: '1px solid #ccc' }}>
+                      <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
+                        <KeyValueInput
+                          initKeyValue={params}
+                          setResult={setParams}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ):null}
+                ) : null}
 
-            </div>
+              </div>
 
-            <Resizer onResize={handleVerticalResize} />
+              <Resizer onResize={handleVerticalResize} />
 
-            <div style={styles.responseArea}>
-              <ResponseAnalysisDisplay
-                responseData={responseData}
-                aiAnalysis={aiAnalysis}
-                testCaseResults={testCaseResults}
-              />
+              <div style={styles.responseArea}>
+                <ResponseAnalysisDisplay
+                  responseData={responseData}
+                  aiAnalysis={aiAnalysis}
+                  testCaseResults={testCaseResults}
+                />
+              </div>
             </div>
           </div>
         </div>
