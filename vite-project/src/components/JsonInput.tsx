@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import "../JsonInput.css"
 const JsonInput = ({ initJson, onJsonParsed }) => {
   const [jsonInput, setJsonInput] = useState(JSON.stringify(initJson));
   const [parsedJson, setParsedJson] = useState(initJson);
@@ -42,12 +42,12 @@ const JsonInput = ({ initJson, onJsonParsed }) => {
   }, [jsonInput, onJsonParsed]);
 
   return (
-    <div className="container mt-4">
+    <div className="container-mt-4">
       <div className="form-group">
         <label htmlFor="jsonInput">JSON Input</label>
         <textarea
           id="jsonInput"
-          className="form-control"
+          className="textarea-custom"
           value={jsonInput}
           onChange={handleInputChange}
           placeholder="Enter JSON here"

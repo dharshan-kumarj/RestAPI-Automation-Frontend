@@ -68,7 +68,7 @@ function Main() {
   const [searchParams] = useSearchParams();
   const workspace_id = searchParams.get("workspace");
   const [testCases, setTestCases] = useState<TestCase[]>([]);
-  const [headers, setHeaders] = useState<Record<string, string>>({"test":"test1"});
+  const [headers, setHeaders] = useState<Record<string, string>>({});
   const [params, setParams] = useState<Record<string, string>>({});
   const [body, setBody] = useState<Record<string, any>>();
   const [method, setMethod] = useState<string>("POST");
@@ -196,6 +196,7 @@ function Main() {
             setTestCases={setTestCases}
             setUrl={setUrl}
             setMethod={setMethod}
+            handleResponse={handleResponse}
           />
         </div>
 
@@ -249,7 +250,7 @@ function Main() {
                     <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
                       <KeyValueInput
                         initKeyValue={headers}
-                        onObjectParsed={setHeaders}
+                        setResult={setHeaders}
                       />
                     </div>
                   </div>
@@ -260,7 +261,7 @@ function Main() {
                     <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
                       <KeyValueInput
                         initKeyValue={params}
-                        onObjectParsed={setParams}
+                        setResult={setParams}
                       />
                     </div>
                   </div>

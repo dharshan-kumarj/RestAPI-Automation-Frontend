@@ -1,0 +1,43 @@
+/* Container styling */
+.container {
+    background-color: #1c1c1c;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  /* Button styling */
+  .btn-primary {
+    background-color: #ff4b5c;
+    border-color: #ff4b5c;
+  }
+  
+  .btn-secondary {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+  
+  /* Input and textarea styling */
+  .form-control {
+    background-color: #2c2c2c; /* Light black (dark gray) background */
+    color: white;
+    border: 1px solid #555;
+  }
+  
+  .form-control::placeholder {
+    color: #888;
+  }
+  
+  /* Danger button styling */
+  .btn-danger {
+    background-color: #d9534f;
+    border-color: #d9534f;
+  }
+  
+  /* Preformatted text area styling */
+  .pre-custom {
+    background-color: #2c2c2c; /* Light black (dark gray) background */
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+  }

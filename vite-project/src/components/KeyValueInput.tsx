@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import '../KeyValue.css'; // Import the stylesheet
 
-const KeyValueInput = ({ initKeyValue, onObjectParsed }) => {
+const KeyValueInput = ({ initKeyValue,setResult }) => {
   const [keyValuePairs, setKeyValuePairs] = useState([]);
   const [parsedObject, setParsedObject] = useState({});
 
-  // Initialize state with default initKeyValue if provided
   useEffect(() => {
     if (initKeyValue) {
       const initialPairs = Object.keys(initKeyValue).map(key => ({ key, value: initKeyValue[key], description: '' }));
@@ -16,7 +16,6 @@ const KeyValueInput = ({ initKeyValue, onObjectParsed }) => {
     const newKeyValuePairs = [...keyValuePairs];
     newKeyValuePairs[index][field] = value;
     setKeyValuePairs(newKeyValuePairs);
-    handleParse(newKeyValuePairs);
   };
 
   const handleAddPair = () => {
@@ -26,22 +25,25 @@ const KeyValueInput = ({ initKeyValue, onObjectParsed }) => {
   const handleRemovePair = (index) => {
     const newKeyValuePairs = keyValuePairs.filter((_, i) => i !== index);
     setKeyValuePairs(newKeyValuePairs);
-    handleParse(newKeyValuePairs);
   };
 
-  const handleParse = (pairs = keyValuePairs) => {
+  const handleParse = () => {
     const obj = {};
-    pairs.forEach(pair => {
+    keyValuePairs.forEach(pair => {
       if (pair.key) {
         obj[pair.key] = pair.value;
       }
     });
+    setResult(obj)
     setParsedObject(obj);
-    onObjectParsed(obj);
   };
 
   return (
     <div className="container mt-4">
+      <div className='text-end mb-3'>
+        <button className="btn btn-secondary mt-2 me-2" onClick={handleAddPair}>Add Pair</button>
+        <button className="btn btn-primary mt-2" onClick={handleParse}>Parse</button>
+      </div>
       {keyValuePairs.map((pair, index) => (
         <div className="form-row align-items-center mb-2" key={index}>
           <div className="row">
@@ -78,12 +80,11 @@ const KeyValueInput = ({ initKeyValue, onObjectParsed }) => {
           </div>
         </div>
       ))}
-      <button className="btn btn-secondary mt-2" onClick={handleAddPair}>Add Pair</button>
-
+      
       {Object.keys(parsedObject).length > 0 && (
         <div className="mt-4">
           <h5>Parsed Object:</h5>
-          <pre>{JSON.stringify(parsedObject, null, 2)}</pre>
+          <pre className="pre-custom">{JSON.stringify(parsedObject, null, 2)}</pre>
         </div>
       )}
     </div>

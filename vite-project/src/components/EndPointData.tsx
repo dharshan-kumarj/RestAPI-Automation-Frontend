@@ -6,6 +6,7 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
   const [error, setError] = useState(null);
   const [path, setPath] = useState('');
   const [queryParams, setQueryParams] = useState('');
+  const [responseData, setResponseData] = useState({});
 
   useEffect(() => {
     // Update query parameters in the URL when params change
@@ -35,9 +36,11 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
         body,
         test_cases: testCases,
       },
+      response_data: responseData,
       path: `/${path}`
     };
-
+    console.log(saveData)
+   
     try {
       const response = await fetch('https://api-testing-zelerius.portos.site/save-to-workspace', {
         method: 'POST',
@@ -91,9 +94,11 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
 
       const data = await response.json();
       onResponse(data);
+      setResponseData(data)
     } catch (error) {
       setError(error instanceof Error ? error : new Error('An error occurred'));
       onResponse(null);
+      setResponseData({})
     } finally {
       setIsLoading(false);
     }
@@ -118,7 +123,7 @@ function EndPointData({ method, url, setUrl, setMethod, token, headers, body, te
     <div className="container-fluid bg-dark text-light py-5">
       <div className="row justify-content-center">
         <div className="col-12 col-md-10 col-lg-8">
-          
+
           <form onSubmit={handleSubmit} className="mb-3">
             <div className="d-flex align-items-center mb-3">
               <div className="me-2">

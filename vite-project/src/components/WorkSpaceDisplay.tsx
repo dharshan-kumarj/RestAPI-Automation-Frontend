@@ -10,6 +10,7 @@ const WorkSpaceDisplay = ({
   setTestCases,
   setUrl,
   setMethod,
+  handleResponse
 }) => {
   const [requests, setRequests] = useState([]);
   const [folderStructure, setFolderStructure] = useState({});
@@ -73,6 +74,7 @@ const WorkSpaceDisplay = ({
         setTestCases([...request_data.request.test_cases]);
         setUrl(request_data.request.url);
         setMethod(request_data.request.method);
+        handleResponse(request_data.response)
       }
     } catch (error) {
       console.error("Error fetching workspace details:", error);
